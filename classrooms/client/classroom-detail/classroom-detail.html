@@ -1,0 +1,64 @@
+<template name="classroomDetail">
+  <table class="table table-bordered table-responsive">
+    <thead>
+      <tr>
+        <th>Student</th>
+        <th>Transition Date</th>
+        {{#each daysOfWeek}}
+          <th>{{this}}</th>
+        {{/each}}
+      </tr>
+    </thead>
+    <tbody>
+      {{#each student in students}}
+        <tr>
+          <td>{{student.firstName}} {{student.lastName}}</td>
+          <td>{{ formatDate student.moveDate "MMM DD, YYYY" }} ({{getAgeAtTransitionDate student.dateOfBirth student.moveDate}})</td>
+          {{#each daysOfWeek}}
+            <td style="background-color:{{getColorIfHasClass student}}"></td>
+          {{/each}}
+        </tr>
+      {{/each}}
+      <tr>
+        <td><b>Daily Ratios</b></td>
+        <td></td>
+        {{#each daysOfWeek}}
+          <td><b>{{numOfStudentsPerDay ../_id}} / {{../capacity}}</b></td>
+        {{/each}}
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="capitalize">Students Transitioning Into {{toLower type}} Classroom</h3>
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>Student</th>
+      <th>Current Status</th>
+      <th>Transition Date</th>
+      {{#each daysOfWeek}}
+        <th>{{this}}</th>
+      {{/each}}
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each student in studentsTransitioning}}
+      <tr class="capitalize" student-id="{{student._id}}">
+        <td class="vertically-centered">{{student.firstName}} {{student.lastName}}</td>
+        <td class="vertically-centered">{{getStudentStatus student}}</td>
+        <td class="vertically-centered">{{formatDate student.moveDate "MMM DD, YYYY"}}</td>
+        {{#each daysOfWeek}}
+          <td style="background-color:{{getColorIfRequestsClass student}}"></td>
+        {{/each}}
+
+        <td>
+          <button title="Move to Class" class="btn btn-sm btn-success btn-circular move-to-class"><span class="glyphicon glyphicon-education"></span></button>
+          <!-- <button title="Move To Waitlist" class="btn btn-circular" id="move-to-waitlist"><span class="glyphicon glyphicon-log-out"></span></button> -->
+        </td>
+      </tr>
+
+    {{/each}}
+    </tbody>
+  </table>
+</template>

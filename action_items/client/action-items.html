@@ -1,0 +1,53 @@
+<template name="actionItems">
+
+  <div class="row">
+    <form class="new-task col-md-6">
+      <h3>Create Action Items</h3>
+      <!-- Task Type -->
+      <div class="row">
+        <div class="form-group col-md-6">
+          <select class="form-control" id="type">
+            <option value="INFANT">Infant</option>
+            <option value="TODDLER">Toddler</option>
+            <option value="MISCELLANEOUS">Miscellaneous</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Task Description -->
+      <div class="form-group">
+        <textarea id="description" class="form-control" placeholder="Description"></textarea>
+      </div>
+
+      <input type="submit" class="btn btn-primary" id="add-Task" value="Add Task" />
+    </form>
+  </div>
+
+  <hr />
+  
+   <div class="row">
+    <div class="col-md-12">
+      <h3>List of Action Items</h3>
+      <!-- The tab list on top of the page. A tab for each class -->
+      <ul class="nav nav-tabs action-item-tabs" role="tablist">
+        {{#each actionItemTypes}}
+          <li role="presentation" class="tab-classroom-type {{isActive @index}}" classroom-id="{{_id}}"><a href="#{{toLower this}}" aria-controls="{{toLower this}}" role="tab" data-toggle="tab">{{toLower this}}</a></li>
+        {{/each}}
+      </ul>
+
+      <!-- Each of the tab content -->
+      <div class="tab-content">
+        {{#each actionItemTypes}}
+          <div role="tabpanel" class="tab-pane action-item-tab {{isActive @index}}" id="{{toLower this}}">
+            {{> actionItemTableChooser this}}
+          </div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+  
+  <hr />
+
+  {{> actionItemDetail selectedActionItem}}
+  
+</template>

@@ -1,0 +1,8 @@
+{
+  "public": {
+    "appName": "olbapp",
+    "appRootDir":"testapp",
+    "infantTransMonth": 16,
+    "toddlerTransMonth": 30
+  }
+}

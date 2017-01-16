@@ -1,0 +1,44 @@
+::-webkit-scrollbar {
+    width: 5px;
+}
+ 
+::-webkit-scrollbar-track {
+    background-color: lightgray;
+    border-radius: 0;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 0;
+    background-color: darkgray;
+}
+
+.capitalize{
+  text-transform: capitalize;
+}
+
+.lowercase{
+  text-transform: lowercase;
+}
+
+button.btn-circular{
+  border-radius: 50%;
+}
+
+p.large,li.large,a.large{
+  font-size: 20px;
+}
+
+.no-outline{
+  outline: none !important;
+}
+
+.partially-enrolled-bg{
+  background-color: #E0FFFF;
+}
+.student{
+  cursor: move;
+}
+
+.vertically-centered{
+  vertical-align: middle !important;
+}

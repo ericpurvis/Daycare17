@@ -1,0 +1,43 @@
+<template name="applicationDetail">
+  <div class="row">
+    <div class="col-md-6">
+      <dl class="dl-horizontal capitalize">
+        <dt>Child Name</dt><dd>{{firstName}} {{lastName}}</dd>
+        <dt>Date of Birth</dt><dd>{{formatDate dateOfBirth 'MMM DD, YYYY'}}</dd>
+        <dt>Age</dt><dd>{{getAge dateOfBirth}}</dd>
+        <dt>Class</dt><dd>{{toLower group}}</dd>
+        <dt>Affiliation</dt><dd>{{studentAffiliation type}}</dd>
+        <dt>Days Requested</dt><dd>
+          <ul class="list-unstyled list-inline">
+            {{#each sortedDays daysRequested}}
+              <li class="{{flexibleColorClass}}">{{toLower day}}</li>
+            {{/each}}
+          </ul>
+        </dd>
+        <dt>Date Received</dt><dd>{{formatDate createdAt 'MMM DD, YYYY'}}</dd>
+      </dl>      
+    </div>
+    <div class="col-md-6">
+      <ul class="list-unstyled">
+        {{#each parents}}
+          <li>
+            <dl class="dl-horizontal capitalize">
+              <dt>Parent Name</dt><dd>{{firstName}} {{lastName}}</dd>
+              <dt>Address</dt><dd>{{address}}</dd>
+              <dt>Phone Number</dt><dd>{{phoneNumber}}</dd>
+              <dt>Email</dt><dd class="lowercase"><a href="mailto:{{email}}">{{email}}</a></dd>
+            </dl>
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <button title="Accept Application" class="btn btn-success btn-lg btn-circular accept" ><span class="glyphicon glyphicon-ok" aria-hidden="true"></span></button>
+    </div>
+    <div class="col-md-6 text-right">
+      <button title="Decline Application" class="btn btn-danger btn-lg btn-circular decline"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+    </div>
+  </div>
+</template>
