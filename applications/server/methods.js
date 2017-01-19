@@ -96,7 +96,7 @@ Meteor.methods({
         dob = new Date(moment(application.student.dob));
       }
       var ageInMonths = moment().diff(dob, 'months') || "";
-      if (ageInMonths < 16) {
+      if (ageInMonths < Meteor.settings.public.infantTransMonth) {
         monthsToMoveDate = Meteor.settings.public.infantTransMonth;
         moveDate = new Date(new Date(dob).setMonth(dob.getMonth()+monthsToMoveDate));
       }
