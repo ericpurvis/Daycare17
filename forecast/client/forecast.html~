@@ -1,0 +1,3 @@
+<template name="forecast">
+  <h1> Forecast </h1>
+</tempplate>
