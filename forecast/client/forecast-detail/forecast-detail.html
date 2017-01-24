@@ -1,0 +1,12 @@
+<template name="forecastDetail">
+<table class="table table-bordered table-responsive">
+    <thead>
+      <tr>
+        <th>Dates and Movements</th>
+        {{#each daysOfWeek}}
+          <th>{{this}}</th>
+        {{/each}}
+      </tr>
+    </thead>
+</table>
+</template>
