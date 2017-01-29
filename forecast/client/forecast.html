@@ -3,7 +3,9 @@
   
   <!-- Forecast timeframe dropdown -->
       <div class="row">
+	   
         <div class="form-group col-md-3">
+	      <label>Time Frame</label>
           <select class="form-control" id="timeframe">
             <option value="3 MONTHS">3 Months</option>
             <option value="6 MONTHS">6 Months</option>
@@ -13,7 +15,26 @@
             <option value="30 MONTHS">30 Months</option>
           </select>
         </div>
+	   
+	    <div class="col-md-4">
+         <div class="form-group">
+            <label>Start Date</label>
+            <div class="input-group">
+              <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+              <input class="form-control" type="date" name="sdate" id="sdate">
+            </div>
+          </div>
+	    </div>
+	    <div class="col-md-4">
+          <div class="form-group">
+	         <label>Export Excel</label>
+	         <div>
+			 	<button type="button" class="btn btn-primary add" id="toggle-second-parent">Export</button>
+	         </div>
+          </div>
+	    </div>
       </div>
+      
       
   <div class="row">
     <div class="col-md-12">
