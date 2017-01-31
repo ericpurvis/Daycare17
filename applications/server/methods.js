@@ -1,5 +1,5 @@
 Meteor.methods({
-  /**
+/**
    * This function will create an application using the given information
    * 1. Create the parent document
    * 2. Create the student document (with status = Application, paid applicationFee = false)
@@ -227,7 +227,6 @@ Meteor.methods({
     // update the student it self 
     Students.update({_id: studentId}, {$set: {status: "WAITLIST", order: order, daysWaitlisted: student.daysRequested, paidApplicationFee: true, }});
   },
-
   /**
    * [Insert into parent collection]
    * @param  {{parent object}} parent [object containing all required information of a parent containing variables below]

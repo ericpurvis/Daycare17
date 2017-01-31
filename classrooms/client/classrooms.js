@@ -3,6 +3,7 @@ Template.classrooms.onCreated(function(){
   function dataReady(){
     var id = Classrooms.findOne()._id;
     Session.set("selectedClassroomId", id);
+    Session.set("secondParent", false);
   }
 });
 
@@ -39,5 +40,20 @@ Template.classrooms.helpers({
 Template.classrooms.events({
   'click .classroom-tabs li': function () {
     Session.set("selectedClassroomId",  this._id);
+  },
+  
+  /**
+   *
+   * @param event
+   */
+  "click .add": function(event){
+    //event.preventDefault();
+
+    //Session.set('studentToEdit', this._id);
+    //sets editMode to waitlist to differentiate between waitlist and enrolled student edit
+    Session.set('editMode', 'classroomsWithStudents');
+    Modal.show('addStudentModal');
+
   }
+  
 });

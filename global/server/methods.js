@@ -1,4 +1,5 @@
 Meteor.methods({
+  
   /**
    * [addTask description]
    * @param {[type]} task [description]
