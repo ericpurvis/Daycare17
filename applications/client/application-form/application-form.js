@@ -111,7 +111,7 @@ Template.applicationForm.events({
     }
     Errors.remove({});
     Meteor.call("createApplication", application, createApplicationCallback);
-
+    Modal.show('ApplicationSuccessModal');
     // Clear the form
     scroll(0,0);
     event.target.reset();
