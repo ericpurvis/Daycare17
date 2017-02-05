@@ -16,3 +16,16 @@ nav.navbar {
 nav.navbar ul.navbar-nav li a:hover {
   background-color: #4e528b;
 }
+
+.button__badge {
+  background-color: #fa3e3e;
+  border-radius: 2px;
+  color: white;
+ 
+  padding: 1px 3px;
+  font-size: 10px;
+  
+  position: absolute; /* Position the badge within the relatively positioned button */
+  top: 0;
+  right: 0;
+}

@@ -1,3 +1,8 @@
+Template.navbar.onCreated(function(){
+  Meteor.subscribe("applicationStudents");
+});
+
+
 Template.navbar.helpers({
   userEmail: function () {
     if(Meteor.user())
@@ -7,6 +12,12 @@ Template.navbar.helpers({
   userName: function() {
     if(Meteor.user())
       return Meteor.user().profile.firstName + " " + Meteor.user().profile.lastName;
+  },
+
+  applicants: function () {
+    var apps = Students.find({status: "APPLICATION"},{sort: {createdAt: 1}}).count();
+    console.log(apps);
+    return apps;
   }
 });
 
