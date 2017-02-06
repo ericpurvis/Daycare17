@@ -111,7 +111,9 @@ Template.applicationForm.events({
     }
     Errors.remove({});
     Meteor.call("createApplication", application, createApplicationCallback);
-    Modal.show('ApplicationSuccessModal');
+      Modal.show('ApplicationSuccessModal');
+      //send email to staff memeber
+      Meteor.call("sendEmailToStaff");
     // Clear the form
     scroll(0,0);
     event.target.reset();

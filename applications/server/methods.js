@@ -1,5 +1,8 @@
 Meteor.methods({
-/**
+
+    
+
+    /**
    * This function will create an application using the given information
    * 1. Create the parent document
    * 2. Create the student document (with status = Application, paid applicationFee = false)
@@ -424,5 +427,19 @@ Meteor.methods({
 
 
     return emailButtonUrl;
-  }
+  },
+    //Send email to a staff memeber
+    'sendEmailToStaff':function(){
+
+PrettyEmail.send('call-to-action', {
+      to: "marinov.7@buckeyemail.osu.edu",
+      subject: "New Childcare Application Recieved",
+      heading: 'Infant and Toddler Application Recieved',
+      message: 'A parent has completed an application!',
+      buttonText: 'DaycareURL',
+      buttonUrl: 'http://ourladyofbethlehem.org/waitlistapp',
+      messageAfterButton: "",
+    });
+    }
+
 });
