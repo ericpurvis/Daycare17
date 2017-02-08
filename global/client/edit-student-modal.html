@@ -195,16 +195,37 @@
                   {{#if fromWaitlist}}
                   <div class="form-group">
                     <div class="checkbox-inline">
-                      <label for="nc"><input class="checkbox" type="checkbox" name="notConceived" value="NC" id="nc" /> Pregnant</label>
+                      <label for="pregnant"><input class="checkbox" type="checkbox" name="pregnant" value="pregnant" id="pregnant"/>Pregnant</label>
+                    </div>
+                    <div class="checkbox-inline">
+                      <label for="nc"><input class="checkbox" type="checkbox" name="notConceived" value="NC" id="nc" />Not Yet Conceived</label>
                     </div>
                   </div>
                   <div class="form-group">
-                    <label for='dueDate'>If pregnant, expected due date?</label>
+                    <label for='dueDate'>Expected Due Date?</label>
                     <div class="input-group">
                       <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                      <input class="form-control" type="date" name="dueDate" id="dueDate" disabled>
+                      <input class="form-control" type="date" name="dueDate" id="dueDate">
                     </div>
                   </div>
+                  <script>
+    $("#dueDate").prop('disabled', true);
+
+    var notConceived = false;
+    var pregnant = false;
+    $("#nc").change(function(){
+      notConceived = !notConceived;
+      $("#dueDate").prop('disabled', (notConceived||!pregnant));
+      $("#dob").prop('disabled', (notConceived||pregnant));
+    });
+    $( "#pregnant" ).change(function() {
+      pregnant=!pregnant;
+      $("#dueDate").prop('disabled', (notConceived||!pregnant));
+      $("#dob").prop('disabled', (notConceived||pregnant));
+
+    });
+
+  </script>
                   {{/if}}
                 </div>
               </div>
@@ -310,8 +331,6 @@
             </div>
           </form>
         </div>
-
-
       </div>
     </div>
   </div>

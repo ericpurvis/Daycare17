@@ -125,6 +125,7 @@ Meteor.methods({
       firstName: waitlist.parent.firstName,
       lastName: waitlist.parent.lastName,
       address: waitlist.parent.address,
+      pregnant:waitlist.pregnant,
       phoneNumber: waitlist.parent.phone,
       email: waitlist.parent.email
     }});
@@ -151,27 +152,57 @@ Meteor.methods({
         flexible: flexible
       });
     });
-
+    
     // insert the student
     //if edit from waitlist, change days waitlisted
+    //cases ofr all the dates that may not be available if child not conceived 
     if(editMode=='waitlist') {
-      var studentId = Students.update(sId, {
+     var studentId = Students.update(sId, {
         $set: {
           firstName: waitlist.student.firstName,
           lastName: waitlist.student.lastName,
-          dateOfBirth: new Date(moment(waitlist.student.dob)),
+          //dateOfBirth: new Date(moment(waitlist.student.dob)),
           group: waitlist.group.toUpperCase(),
           status: waitlist.status,
           type: waitlist.type.toUpperCase(),
-          startDate: new Date(moment(waitlist.startDate)),
+          //startDate: new Date(moment(waitlist.startDate)),
          // order: waitlist.order,
           details: waitlist.details,
           daysWaitlisted: days,
-          moveDate: new Date(moment(waitlist.moveDate)),
+          //moveDate: new Date(moment(waitlist.moveDate)),
           order:order,
           classId: classroomId,
+          //dueDate: new Date(moment(waitlist.student.dueDate)),
         }
       });
+     if(waitlist.student.dob!=""){
+     	var studentId = Students.update(sId, {
+        $set: {    
+          dateOfBirth: new Date(moment(waitlist.student.dob)),     
+        }
+      });
+     }
+     if(waitlist.startDate!=""){
+     	var studentId = Students.update(sId, {
+        $set: {    
+          startDate: new Date(moment(waitlist.startDate)),     
+        }
+      });
+     }
+     if(waitlist.moveDate!=""){
+     	var studentId = Students.update(sId, {
+        $set: {       
+          moveDate: new Date(moment(waitlist.moveDate)),
+        }
+      });
+     }
+     if(waitlist.student.dueDate!=""){
+     	var studentId = Students.update(sId, {
+        $set: {
+          dateOfBirth: new Date(moment(waitlist.student.dueDate)),
+        }
+      });
+     }
     }else if(editMode=='enrolled'){
       var studentId = Students.update(sId, {
         $set: {
@@ -187,6 +218,7 @@ Meteor.methods({
           moveDate:new Date(moment(waitlist.moveDate)),
           daysWaitlisted: waitlist.waitlistedDays,
           classId:classroomId,
+          
         }
       });
     }

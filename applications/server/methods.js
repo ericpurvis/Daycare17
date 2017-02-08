@@ -432,7 +432,7 @@ Meteor.methods({
     'sendEmailToStaff':function(){
 
 PrettyEmail.send('call-to-action', {
-      to: "marinov.7@buckeyemail.osu.edu",
+      to: "purvis.38@buckeyemail.osu.edu",
       subject: "New Childcare Application Recieved",
       heading: 'Infant and Toddler Application Recieved',
       message: 'A parent has completed an application!',

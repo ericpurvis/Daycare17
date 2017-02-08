@@ -233,6 +233,7 @@ Template.editStudentModal.events({
     if(Session.get('editMode')=='waitlist') {
       if(Session.get('editMode')=='waitlist') {
         var notConceived = $(event.target).find('input:checkbox[name=notConceived]:checked').val();
+        var pregnant = $(event.target).find('input:checkbox[name=pregnant]:checked').val();
       }
       var data = {
         // Parent Information
@@ -251,6 +252,7 @@ Template.editStudentModal.events({
           lastName: event.target.lname.value,
           dob: event.target.dob.value,
           conceived: notConceived,
+          dueDate: event.target.dueDate.value 
         },
 
         // Other details of the application
@@ -262,6 +264,7 @@ Template.editStudentModal.events({
         details: event.target.details.value,
         moveDate: event.target.moveDate.value,
         status: "",
+        pregnant:pregnant,
       };
     }
     else{
@@ -281,7 +284,7 @@ Template.editStudentModal.events({
           firstName: event.target.fname.value,
           lastName: event.target.lname.value,
           dob: event.target.dob.value,
-
+          dueDate: event.target.dueDate.value
           // conceived: notConceived,
         },
 
@@ -294,6 +297,7 @@ Template.editStudentModal.events({
         details: event.target.details.value,
         status: "",
         moveDate: event.target.moveDate.value,
+        pregnant:pregnant,
       };
     }
 
@@ -357,14 +361,14 @@ Template.editStudentModal.events({
    * @param  {[type]} tpl [description]
    * @return {[type]}     [description]
    */
-  'change #nc': function(e,tpl){
+ // 'change #nc': function(e,tpl){
 
 
-      $("#dueDate").prop('disabled', checked);
-      $("#dob").prop('disabled', !checked);
-      checked = !checked;
+    //  $("#dueDate").prop('disabled', checked);
+   //   $("#dob").prop('disabled', !checked);
+    //  checked = !checked;
 
-  },
+ // },
 
   /**
    * [description]

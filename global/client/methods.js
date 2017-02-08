@@ -207,8 +207,12 @@ editValidate = function(application, status){
     Errors.insert({message:'Please enter valid email', seen:false,type:'validation'});
     valid = false;
   }
-  if(application.student.dob=="" && application.student.conceived!="NC"){
-    Errors.insert({message:'Please enter Date Of Birth or select Not Conceived', seen:false,type:'validation'});
+if(application.student.dob=="" && application.student.conceived!="NC" && application.pregnant!="pregnant"){
+    Errors.insert({message:'Please enter Date Of Birth or select Not Conceived / Pregnant', seen:false,type:'validation'});
+    valid = false;
+  }
+if(application.student.dueDate=="" && application.student.conceived!="NC" && application.pregnant=="pregnant"){
+    Errors.insert({message:'Please enter estimated due date if Pregnancy selected', seen:false,type:'validation'});
     valid = false;
   }
   if(Session.get('editMode')=='waitlist') {
