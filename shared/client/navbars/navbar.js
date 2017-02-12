@@ -16,7 +16,12 @@ Template.navbar.helpers({
 
   applicants: function () {
     var apps = Students.find({status: "APPLICATION"},{sort: {createdAt: 1}}).count();
-    console.log(apps);
+    var badge = document.getElementById("AppBadge");
+    if(apps < 1){
+      badge.style.visibility = "hidden";
+    }else{
+      badge.style.visibility = "visible";
+    }
     return apps;
   }
 });
