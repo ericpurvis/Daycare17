@@ -22,5 +22,21 @@ Template.forecast.helpers({
     return Classrooms.find();
   }
   
-  
 });
+
+  /**
+   * Takes the students from the current infant classrooms and adds them into the forecast model ( this will require a model be created for it)
+   * Look at screen shot and google docs they sent for how the table should look and what fields are needed
+   * 
+   * this will create the model to be interpolated to the screen
+   * 
+   * This should take in a value to tell it to retrieve infant or toddler data.
+   */
+  function createForecastModel()
+  {
+
+    //there is a function in students.js called studentsInClass that will return all the students in the chosen class
+    return;
+  }
+
+
