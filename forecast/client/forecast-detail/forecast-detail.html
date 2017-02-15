@@ -9,4 +9,36 @@
       </tr>
     </thead>
 </table>
+<h3 class="capitalize">Waitlist Forecast for {{toLower type}} Classroom</h3>
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>Student</th>
+      <th>Current Status</th>
+      <th>Transition Date</th>
+      {{#each daysOfWeek}}
+        <th>{{this}}</th>
+      {{/each}}
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each student in studentsTransitioning}}
+      <tr class="capitalize" student-id="{{student._id}}">
+        <td class="vertically-centered">{{student.firstName}} {{student.lastName}}</td>
+        <td class="vertically-centered">{{getStudentStatus student}}</td>
+        <td class="vertically-centered">{{formatDate student.moveDate "MMM DD, YYYY"}}</td>
+        {{#each daysOfWeek}}
+          <td style="background-color:{{getColorIfRequestsClass student}}"></td>
+        {{/each}}
+
+        <td>
+          <button title="Move to Class" class="btn btn-sm btn-success btn-circular move-to-class"><span class="glyphicon glyphicon-education"></span></button>
+          <!-- <button title="Move To Waitlist" class="btn btn-circular" id="move-to-waitlist"><span class="glyphicon glyphicon-log-out"></span></button> -->
+        </td>
+      </tr>
+
+    {{/each}}
+    </tbody>
+  </table>
 </template>
