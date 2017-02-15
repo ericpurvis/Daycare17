@@ -170,13 +170,14 @@ Meteor.methods({
     if(application.sessionToken.toLowerCase() !== 'admin'){
       Applications.update({token: application.sessionToken}, {$set: {submittedAt: new Date()}});
     }
-
+    
     return {
       status: "201",
       studentId: studentId,
       parentId: parentId,
       studentParentId: studentParentId
     };
+
   },
 
   /**
