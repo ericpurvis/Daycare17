@@ -90,4 +90,4 @@ Schemas.ActionItem = new SimpleSchema({
     }
 });
 
-ActionItems.attachSchema(Schemas.ActionItem)
+ActionItems.attachSchema(Schemas.ActionItem);
