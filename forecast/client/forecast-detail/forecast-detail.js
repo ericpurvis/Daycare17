@@ -12,6 +12,10 @@ Template.forecastDetail.helpers({
     return Students.find({$or: [{status:"ENROLLED"}, {status:"PARTIALLY_ENROLLED"}], classId: this._id},{sort:{moveDate:1}});
   },
   
+  forecastArray: function(){
+    return null;
+  },
+  
 
 /**
    * This function returns all the days of the week
