@@ -30,7 +30,7 @@ Template.classrooms.helpers({
    * @return {Meteor.cursor} cursor to the DB
    */
   studentsInThisClass: function(){
-    var id = Session.get("selectedClassroomId");    
+    var id = Session.get("selectedClassroomId");   
     return Students.find({classId: id, $or: [{status:"ENROLLED"}, {status:"PARTIALLY_ENROLLED"}]});
   },
 
