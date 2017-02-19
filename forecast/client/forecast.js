@@ -76,11 +76,13 @@ Template.forecast.events({
    * 
    * This should take in a value to tell it to retrieve infant or toddler data.
    */
-  function createForecastModel(startDate, timeFrame)
+  function createForecastModel(startDate, timeFrameString)
   {
     var forecastArray =[];
     var endDate = new Date(startDate);
+    var timeFrame = parseInt(timeFrameString);
     endDate.setMonth(startDate.getMonth() + timeFrame);
+    console.log(startDate.getMonth());
     console.log(startDate);
     console.log(timeFrame);
     console.log(endDate);
