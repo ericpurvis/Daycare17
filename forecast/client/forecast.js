@@ -6,13 +6,12 @@ Template.forecast.onCreated(function(){
   function dataReady(){
     var id = Classrooms.findOne()._id;
     Session.set("selectedClassroomId", id);
+    Session.set("selectedTimeFrame", "3");
+    var today = new Date();
+    Session.set("forecastStartDate", today);
   }
-  var today = new Date(); //needs to be changed to the value set in the view
-  var timeFrame = 24; //needs to be changed to the value set in the view
-  createForecastModel(today, timeFrame);
 });
 
-var forecastArray =[];
 
 
 Template.forecast.helpers({
@@ -41,6 +40,14 @@ Template.forecast.helpers({
    */
   classrooms: function(){
     return Classrooms.find();
+  },
+  
+    daysOfWeek:function(){
+    return ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+  },
+  
+  forecastArray: function(){
+    return createForecastModel(Session.get("forecastStartDate"),Session.get("selectedTimeFrame"));
   }
   
 });
@@ -51,6 +58,14 @@ Template.forecast.events({
   'click .classroom-tabs li': function () {
     Session.set("selectedClassroomId",  this._id);
     
+  },
+  
+  'change #timeframe': function (e,tpl) {
+    Session.set("selectedTimeFrame",  tpl.$("#timeframe").val());
+  },
+  
+  'input #sdate': function (e, tpl) {
+    Session.set("forecastStartDate", e.target.sdate.value);
   }
   });
   /**
@@ -63,6 +78,7 @@ Template.forecast.events({
    */
   function createForecastModel(startDate, timeFrame)
   {
+    var forecastArray =[];
     var endDate = new Date(startDate);
     endDate.setMonth(startDate.getMonth() + timeFrame);
     console.log(startDate);
@@ -110,7 +126,7 @@ Template.forecast.events({
       }
       if(student.moveDate > startDate && student.moveDate < endDate){
         console.log("Student ARE in range");
-        forecastModel.movements = "As of " + student.moveDate + " W/O " + student.firstName + " " + student.lastName;
+        forecastModel.movements = "As of " + student.moveDate.toJSON().slice(0,10).replace(/-/g,'/') + " without " + student.firstName + " " + student.lastName;
         forecastModel.monCount = mon;
         forecastModel.tueCount = tues;
         forecastModel.wedCount = wed;
@@ -141,16 +157,16 @@ Template.forecast.events({
         forecastArray[arrayCount] = forecastModel;
         arrayCount++;
       }else{
-        console.log("Student not in range");
+        //console.log("Student not in range");
       }
     });
-    console.log(forecastArray);
-    console.log(mon);
-    console.log(tues);
-    console.log(wed);
-    console.log(thur);
-    console.log(fri);
-    return;
+   // console.log(forecastArray);
+   // console.log(mon);
+   // console.log(tues);
+   // console.log(wed);
+   // console.log(thur);
+   // console.log(fri);
+    return forecastArray;
   }
 
 
