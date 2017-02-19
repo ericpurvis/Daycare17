@@ -78,6 +78,7 @@ Template.forecast.events({
    */
   function createForecastModel(startDate, timeFrameString)
   {
+    var classroom = "";
     var forecastArray =[];
     var endDate = new Date(startDate);
     var timeFrame = parseInt(timeFrameString);
@@ -98,6 +99,7 @@ Template.forecast.events({
     var studentCursor = Students.find({classId: id});
     studentCursor.forEach(function(student){
       console.log(student)
+      classroom = student.group;
       for(var i=0;i<student.daysEnrolled.length;i++){
         if("MONDAY" == student.daysEnrolled[i].day){
           mon++;
@@ -162,6 +164,26 @@ Template.forecast.events({
         //console.log("Student not in range");
       }
     });
+     var forecastModel = {
+        movements: String,
+        monCount: String,
+        tueCount:String,
+        wedCount:String,
+        thuCount: String,
+        friCount: String,
+      }
+
+    var available = 12;
+    if(classroom == "INFANT"){
+      available = 8;
+    }
+    forecastModel.movements = "Spots Available:";
+    forecastModel.monCount = available - mon;
+    forecastModel.tueCount = available - tues;
+    forecastModel.wedCount = available - wed;
+    forecastModel.thuCount = available - thur;
+    forecastModel.friCount = available - fri;
+    forecastArray[arrayCount] = forecastModel;
    // console.log(forecastArray);
    // console.log(mon);
    // console.log(tues);
