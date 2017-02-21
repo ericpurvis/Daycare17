@@ -82,10 +82,10 @@ Template.forecast.events({
     var endDate = new Date(startDate);
     var timeFrame = parseInt(timeFrameString);
     endDate.setMonth(startDate.getMonth() + timeFrame);
-    console.log(startDate.getMonth());
-    console.log(startDate);
-    console.log(timeFrame);
-    console.log(endDate);
+    //console.log(startDate.getMonth());
+    //console.log(startDate);
+    //console.log(timeFrame);
+    //console.log(endDate);
     var mon = 0;
     var tues = 0;
     var wed = 0;
@@ -94,10 +94,10 @@ Template.forecast.events({
     
     var id = Session.get("selectedClassroomId");  
     var studCount = Students.find({classId: id}).count();
-    console.log(studCount);
+    //console.log(studCount);
     var studentCursor = Students.find({classId: id});
     studentCursor.forEach(function(student){
-      console.log(student)
+      //console.log(student)
       for(var i=0;i<student.daysEnrolled.length;i++){
         if("MONDAY" == student.daysEnrolled[i].day){
           mon++;
@@ -125,15 +125,17 @@ Template.forecast.events({
         wedCount:String,
         thuCount: String,
         friCount: String,
+        details: String,
       }
       if(student.moveDate > startDate && student.moveDate < endDate){
-        console.log("Student ARE in range");
+        //console.log("Student ARE in range");
         forecastModel.movements = "As of " + student.moveDate.toJSON().slice(0,10).replace(/-/g,'/') + " without " + student.firstName + " " + student.lastName;
         forecastModel.monCount = mon;
         forecastModel.tueCount = tues;
         forecastModel.wedCount = wed;
         forecastModel.thuCount = thur;
         forecastModel.friCount = fri;
+        forecastModel.details = student.details;
         for(var i=0;i<student.daysEnrolled.length;i++){
           if("MONDAY" == student.daysEnrolled[i].day){
             mon--;
