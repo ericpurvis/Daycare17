@@ -96,7 +96,7 @@ Template.forecast.events({
     var id = Session.get("selectedClassroomId");  
     var studCount = Students.find({classId: id}).count();
     //console.log(studCount);
-    var studentCursor = Students.find({classId: id});
+    var studentCursor = Students.find({classId: id},{sort: {moveDate: 1}});
     studentCursor.forEach(function(student){
       //console.log(student)
       //console.log(student)
