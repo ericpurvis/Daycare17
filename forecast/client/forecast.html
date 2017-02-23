@@ -57,8 +57,10 @@
     </thead>
     <tbody>
     	{{#each forecast in forecastArray}}
-    	<tr>
-    		<td>{{forecast.movements}}</td>
+    	
+    	{{#if isMember forecast  }}
+    	<tr bgcolor= "red">
+    	<td>{{forecast.movements}}</td>
     		<td>{{forecast.monCount}}</td>
     		<td>{{forecast.tueCount}}</td>
     		<td>{{forecast.wedCount}}</td>
@@ -66,6 +68,32 @@
     		<td>{{forecast.friCount}}</td>
     		<td>{{forecast.details}}</td>
     	</tr>
+    	{{/if}}
+    	
+    	{{#if isExisting forecast }}
+    	<tr bgcolor= "yellow">
+    	<td>{{forecast.movements}}</td>
+    		<td>{{forecast.monCount}}</td>
+    		<td>{{forecast.tueCount}}</td>
+    		<td>{{forecast.wedCount}}</td>
+    		<td>{{forecast.thuCount}}</td>
+    		<td>{{forecast.friCount}}</td>
+    		<td>{{forecast.details}}</td>
+    	</tr>
+    	{{/if}}
+    	
+    	{{#if isRegular forecast  }}
+    	<tr>
+    	<td>{{forecast.movements}}</td>
+    		<td>{{forecast.monCount}}</td>
+    		<td>{{forecast.tueCount}}</td>
+    		<td>{{forecast.wedCount}}</td>
+    		<td>{{forecast.thuCount}}</td>
+    		<td>{{forecast.friCount}}</td>
+    		<td>{{forecast.details}}</td>
+    	</tr>
+    	{{/if}}
+    		
       {{/each}}	
     </tbody>
 </table>

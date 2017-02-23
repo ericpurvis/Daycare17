@@ -48,6 +48,27 @@ Template.forecast.helpers({
   
   forecastArray: function(){
     return createForecastModel(Session.get("forecastStartDate"),Session.get("selectedTimeFrame"));
+  },
+  
+  isMember:function(forecast) {
+    if(forecast.type=='MEMBER'){
+      return true;
+    }
+    return false;
+  },
+  
+  isExisting:function(forecast) {
+    if(forecast.type=='EXISTING'){
+      return true;
+    }
+    return false;
+  },
+  
+  isRegular:function(forecast) {
+    if(forecast.type=='REGULAR'){
+      return true;
+    }
+    return false;
   }
   
 });
@@ -129,6 +150,7 @@ Template.forecast.events({
         thuCount: String,
         friCount: String,
         details: String,
+        type: String,
       }
       if(student.moveDate > startDate && student.moveDate < endDate){
         //console.log("Student ARE in range");
@@ -139,6 +161,7 @@ Template.forecast.events({
         forecastModel.thuCount = thur;
         forecastModel.friCount = fri;
         forecastModel.details = student.details;
+        forecastModel.type = student.type;
         for(var i=0;i<student.daysEnrolled.length;i++){
           if("MONDAY" == student.daysEnrolled[i].day){
             mon--;
@@ -161,6 +184,7 @@ Template.forecast.events({
             forecastModel.friCount = fri;
           }
         }
+        
         forecastArray[arrayCount] = forecastModel;
         arrayCount++;
       }else{
@@ -175,6 +199,7 @@ Template.forecast.events({
         thuCount: String,
         friCount: String,
         details: String,
+        type: String,
       }
 
     var available = 12;
@@ -188,6 +213,7 @@ Template.forecast.events({
     forecastModel.thuCount = available - thur;
     forecastModel.friCount = available - fri;
     forecastModel.details = "";
+    forecastModel.type = "REGULAR";
     forecastArray[arrayCount] = forecastModel;
    // console.log(forecastArray);
    // console.log(mon);
