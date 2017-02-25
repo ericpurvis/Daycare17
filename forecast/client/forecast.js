@@ -152,7 +152,7 @@ Template.forecast.events({
         details: String,
         type: String,
       }
-      if(student.moveDate > startDate && student.moveDate < endDate){
+      if(student.moveDate > startDate && student.moveDate < endDate && classroom == "INFANT"){
         //console.log("Student ARE in range");
         forecastModel.movements = "As of " + student.moveDate.toJSON().slice(0,10).replace(/-/g,'/') + " without " + student.firstName + " " + student.lastName;
         forecastModel.monCount = mon;
@@ -187,7 +187,97 @@ Template.forecast.events({
         
         forecastArray[arrayCount] = forecastModel;
         arrayCount++;
-      }else{
+        
+        //Else if we're dealing with the toddler class
+        //Check if move date falls within the specified range
+        //Pull all students (infant and toddler) that are enrolled and fit this range
+      } else if(student.moveDate > startDate && student.moveDate < endDate && student.find({status: "ENROLLED"})){
+          
+          //If student is an infant then print "with"
+          if (student.find({group:"INFANT"})){
+               forecastModel.movements = "As of " + student.moveDate.toJSON().slice(0,10).replace(/-/g,'/') + " with " + student.firstName + " " + student.lastName;
+               forecastModel.monCount = mon;
+               forecastModel.tueCount = tues;
+               forecastModel.wedCount = wed;
+               forecastModel.thuCount = thur;
+               forecastModel.friCount = fri;
+               forecastModel.details = student.details;
+               forecastModel.type = student.type;
+               
+               //Check for each day if there are spots available. Increment if so
+               for(var i=0;i<student.daysEnrolled.length;i++){
+                 if("MONDAY" == student.daysEnrolled[i].day){
+                   if(mon < 12){
+                     mon++;
+                     forecastModel.monCount = mon;
+                   }
+                 }
+                 if("TUESDAY" == student.daysEnrolled[i].day){
+                   if(tues < 12){
+                     tues++;
+                     forecastModel.tueCount = tues;
+                   }
+                 }
+                 if("WEDNESDAY" == student.daysEnrolled[i].day){
+                   if(wed < 12){
+                     wed++;
+                     forecastModel.wedCount = wed;
+                   }
+                 }
+                 if("THURSDAY" == student.daysEnrolled[i].day){
+                   if(thur < 12){
+                     thur++;
+                     forecastModel.thuCount = thur;
+                   }
+                 }
+                 if("FRIDAY" == student.daysEnrolled[i].day){
+                   if(fri < 12){
+                     fri++;
+                     forecastModel.friCount = fri;
+                   }
+                 }
+             }   
+          }
+          
+          //If student is a toddler then print "without" and act decrement each day accordingly
+          else{
+            forecastModel.movements = "As of " + student.moveDate.toJSON().slice(0,10).replace(/-/g,'/') + " without " + student.firstName + " " + student.lastName;
+            forecastModel.monCount = mon;
+            forecastModel.tueCount = tues;
+            forecastModel.wedCount = wed;
+            forecastModel.thuCount = thur;
+            forecastModel.friCount = fri;
+            forecastModel.details = student.details;
+            forecastModel.type = student.type;
+            for(var i=0;i<student.daysEnrolled.length;i++){
+              if("MONDAY" == student.daysEnrolled[i].day){
+                mon--;
+                forecastModel.monCount = mon;
+              }
+              if("TUESDAY" == student.daysEnrolled[i].day){
+                tues--;
+                forecastModel.tueCount = tues;
+              }
+              if("WEDNESDAY" == student.daysEnrolled[i].day){
+                wed--;
+                forecastModel.wedCount = wed;
+              }
+              if("THURSDAY" == student.daysEnrolled[i].day){
+                thur--;
+                forecastModel.thuCount = thur;
+              }
+              if("FRIDAY" == student.daysEnrolled[i].day){
+                fri--;
+                forecastModel.friCount = fri;
+              }
+            }
+          }
+          
+          //Do we still need this section?
+          forecastArray[arrayCount] = forecastModel;
+          arrayCount++;
+          
+      } else{
         //console.log("Student not in range");
       }
     });
