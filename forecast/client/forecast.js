@@ -99,7 +99,6 @@ Template.forecast.events({
    */
   function createForecastModel(startDate, timeFrameString)
   {
-    var classroom = "";
     var forecastArray =[];
     var endDate = new Date(startDate);
     var timeFrame = parseInt(timeFrameString);
@@ -115,33 +114,43 @@ Template.forecast.events({
     var fri = 0;
     
     var id = Session.get("selectedClassroomId");  
-    var studCount = Students.find({classId: id}).count();
-    //console.log(studCount);
+    var classroom = Classrooms.findOne({_id: id}).type;
+    //var classroom;
+    //pull students to look through;
+    if(classroom =='INFANT'){
     var studentCursor = Students.find({classId: id},{sort: {moveDate: 1}});
+    }else{
+    var studentCursor = Students.find({status:"ENROLLED"},{sort: {moveDate: 1}});
+    }
+    
+    
+    //collect current enroll count on selected class ID
     studentCursor.forEach(function(student){
       //console.log(student)
       //console.log(student)
-      classroom = student.group;
+      //classroom=student.group;
       for(var i=0;i<student.daysEnrolled.length;i++){
-        if("MONDAY" == student.daysEnrolled[i].day){
+        if("MONDAY" == student.daysEnrolled[i].day && student.group == classroom){
           mon++;
         }
-        if("TUESDAY" == student.daysEnrolled[i].day){
+        if("TUESDAY" == student.daysEnrolled[i].day && student.group == classroom){
           tues++;
         }
-        if("WEDNESDAY" == student.daysEnrolled[i].day){
+        if("WEDNESDAY" == student.daysEnrolled[i].day && student.group == classroom){
           wed++;
         }
-        if("THURSDAY" == student.daysEnrolled[i].day){
+        if("THURSDAY" == student.daysEnrolled[i].day && student.group == classroom){
           thur++;
         }
-        if("FRIDAY" == student.daysEnrolled[i].day){
+        if("FRIDAY" == student.daysEnrolled[i].day && student.group == classroom){
           fri++;
         }
       }
     });
+    
     var arrayCount = 0;
     studentCursor.forEach(function(student){
+      
       var forecastModel = {
         movements: String,
         monCount: String,
@@ -152,6 +161,7 @@ Template.forecast.events({
         details: String,
         type: String,
       }
+      
       if(student.moveDate > startDate && student.moveDate < endDate && classroom == "INFANT"){
         //console.log("Student ARE in range");
         forecastModel.movements = "As of " + student.moveDate.toJSON().slice(0,10).replace(/-/g,'/') + " without " + student.firstName + " " + student.lastName;
@@ -191,10 +201,10 @@ Template.forecast.events({
         //Else if we're dealing with the toddler class
         //Check if move date falls within the specified range
         //Pull all students (infant and toddler) that are enrolled and fit this range
-      } else if(student.moveDate > startDate && student.moveDate < endDate && student.find({status: "ENROLLED"})){
+      }else if(student.moveDate > startDate && student.moveDate < endDate && classroom == "TODDLER"){
           
           //If student is an infant then print "with"
-          if (student.find({group:"INFANT"})){
+          if (student.group=="INFANT"){
                forecastModel.movements = "As of " + student.moveDate.toJSON().slice(0,10).replace(/-/g,'/') + " with " + student.firstName + " " + student.lastName;
                forecastModel.monCount = mon;
                forecastModel.tueCount = tues;
@@ -277,10 +287,15 @@ Template.forecast.events({
           forecastArray[arrayCount] = forecastModel;
           arrayCount++;
           
-      } else{
-        //console.log("Student not in range");
+      }else{
+       //console.log("Student not in range");
       }
+      
     });
+     
+     
+     
+     
      var forecastModel = {
         movements: String,
         monCount: String,
@@ -293,7 +308,7 @@ Template.forecast.events({
       }
 
     var available = 12;
-    if(classroom == "INFANT"){
+    if(classroom == 'INFANT'){
       available = 8;
     }
     forecastModel.movements = "Spots Available:";
