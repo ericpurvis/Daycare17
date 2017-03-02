@@ -1,5 +1,7 @@
+
 Template.applicationDetail.onCreated(function(){
   Meteor.subscribe("applicationStudentsFullInformation");
+  Meteor.subscribe("staffEmail");
 });
 
 Template.applicationDetail.helpers({
