@@ -7,12 +7,12 @@
         <div class="form-group col-md-3">
 	      <label>Time Frame</label>
           <select class="form-control" id="timeframe">
-            <option value="3 MONTHS">3 Months</option>
-            <option value="6 MONTHS">6 Months</option>
-            <option value="12 MONTHS">12 Months</option>
-            <option value="18 MONTHS">18 Months</option>
-            <option value="24 MONTHS">24 Months</option>
-            <option value="30 MONTHS">30 Months</option>
+            <option value="3">3 Months</option>
+            <option value="6">6 Months</option>
+            <option value="12">12 Months</option>
+            <option value="18">18 Months</option>
+            <option value="24">24 Months</option>
+            <option value="30">30 Months</option>
           </select>
         </div>
 	   
@@ -29,7 +29,7 @@
           <div class="form-group">
 	         <label>Export Excel</label>
 	         <div>
-			 	<button type="button" class="btn btn-primary add" id="toggle-second-parent">Export</button>
+			 	<button type="button"  class="btn btn-primary add" id="toggle-second-parent">Export</button>
 	         </div>
           </div>
 	    </div>
@@ -45,14 +45,58 @@
         {{/each}}
       </ul>
 
-      <!-- Each of the tab content -->
-      <div class="tab-content">
-        {{#each classrooms}}
-          <div role="tabpanel" class="tab-pane classroom-students-tab {{isActive @index}}" id="{{toLower type}}">
-            {{> forecastDetail}}
-          </div>
+    <table class="table table-bordered table-responsive">
+    <thead>
+      <tr>
+        <th>Dates and Movements</th>
+        {{#each daysOfWeek}}
+          <th>{{this}}</th>
         {{/each}}
-      </div>
+        <th>Student Details</th>
+      </tr>
+    </thead>
+    <tbody>
+    	{{#each forecast in forecastArray}}
+    	
+    	{{#if isMember forecast  }}
+    	<tr bgcolor= "red">
+    	<td>{{forecast.movements}}</td>
+    		<td>{{forecast.monCount}}</td>
+    		<td>{{forecast.tueCount}}</td>
+    		<td>{{forecast.wedCount}}</td>
+    		<td>{{forecast.thuCount}}</td>
+    		<td>{{forecast.friCount}}</td>
+    		<td>{{forecast.details}}</td>
+    	</tr>
+    	{{/if}}
+    	
+    	{{#if isExisting forecast }}
+    	<tr bgcolor= "yellow">
+    	<td>{{forecast.movements}}</td>
+    		<td>{{forecast.monCount}}</td>
+    		<td>{{forecast.tueCount}}</td>
+    		<td>{{forecast.wedCount}}</td>
+    		<td>{{forecast.thuCount}}</td>
+    		<td>{{forecast.friCount}}</td>
+    		<td>{{forecast.details}}</td>
+    	</tr>
+    	{{/if}}
+    	
+    	{{#if isRegular forecast  }}
+    	<tr>
+    	<td>{{forecast.movements}}</td>
+    		<td>{{forecast.monCount}}</td>
+    		<td>{{forecast.tueCount}}</td>
+    		<td>{{forecast.wedCount}}</td>
+    		<td>{{forecast.thuCount}}</td>
+    		<td>{{forecast.friCount}}</td>
+    		<td>{{forecast.details}}</td>
+    	</tr>
+    	{{/if}}
+    		
+      {{/each}}	
+    </tbody>
+</table>
     </div>
   </div>
 </template>

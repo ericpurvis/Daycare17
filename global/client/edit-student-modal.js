@@ -284,7 +284,7 @@ Template.editStudentModal.events({
           firstName: event.target.fname.value,
           lastName: event.target.lname.value,
           dob: event.target.dob.value,
-          dueDate: event.target.dueDate.value
+          //dueDate: event.target.dueDate.value
           // conceived: notConceived,
         },
 
@@ -297,7 +297,7 @@ Template.editStudentModal.events({
         details: event.target.details.value,
         status: "",
         moveDate: event.target.moveDate.value,
-        pregnant:pregnant,
+        //pregnant:pregnant,
       };
     }
 

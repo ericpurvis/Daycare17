@@ -1,8 +1,9 @@
 Template.addStudentModal.onCreated(function(){
-  //Meteor.subscribe("parents");
-  //Meteor.subscribe("studentParents");
-  //Errors.remove({type:'validation'});
-  //Session.set('parentToEdit', $( "#sel1").val());
+  Meteor.subscribe("parents");
+    Meteor.subscribe("classrooms");
+  Meteor.subscribe("studentParents");
+  Errors.remove({type:'validation'});
+  Session.set('parentToEdit', $( "#sel1").val());
   //$("#dueDate").prop('disabled', true);
   //checked = false;
 });
@@ -13,7 +14,7 @@ Template.addStudentModal.events({
     event.preventDefault();
 
     // getting the token from the URL 
-    sessionToken = Router.current().params.token;
+    //sessionToken = Router.current().params.token;
 
     Errors.remove({type:'validation'});
 
@@ -83,7 +84,7 @@ Template.addStudentModal.events({
       flexible: $(event.target).find('input:checkbox[name=flexible]:checked').val(),
       details: event.target.details.value,
       pregnant:pregnant,
-      sessionToken: sessionToken
+      //sessionToken: sessionToken
     };
     if(!applicationValidate(application)){
       formValidated = false;
@@ -107,12 +108,15 @@ Template.addStudentModal.events({
        application.secondParent.phone = application.secondParent.phone.substring(0,3) + '-' +application.secondParent.phone.substring(3,6) + '-' + application.secondParent.phone.substring(6,10);
       }
     }
+    
+    if(application.detils==null){
+    	application.details ="";
+    }
+    
     Errors.remove({});
-    var addedStudent = Meteor.call("createApplication", application, createApplicationCallback);
-    Meteor.call("applicationAccepted", addedStudent.studentId, applicationAcceptedCallback);
-    // Clear the form
-    scroll(0,0);
-    event.target.reset();
+    Meteor.call("directlyEnroll", application);
+    Modal.hide('addStudentModal');
+    
 	},
 
   /**
