@@ -1,3 +1,4 @@
+Meteor.subscribe('staffEmail');
 //removes errors if returning to application page
 Template.applicationForm.rendered = function(){
   Errors.remove({type:'validation'});
@@ -112,8 +113,15 @@ Template.applicationForm.events({
     Errors.remove({});
     Meteor.call("createApplication", application, createApplicationCallback);
       Modal.show('ApplicationSuccessModal');
+// var console = console || {log: function(){}};
+      //
       //send email to staff memeber
-      Meteor.call("sendEmailToStaff");
+      var sEmail= StaffEmail.findOne({num:1}).email
+     // window.console(sEmail);
+      Meteor.call('sendEmailToStaff',sEmail);
+      //
+
+      
     // Clear the form
     scroll(0,0);
     event.target.reset();

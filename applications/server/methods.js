@@ -1,3 +1,5 @@
+
+
 Meteor.methods({
 
     
@@ -430,16 +432,16 @@ Meteor.methods({
     return emailButtonUrl;
   },
     //Send email to a staff memeber
-    'sendEmailToStaff':function(){
+    'sendEmailToStaff': function(staffEmail){
 
 PrettyEmail.send('call-to-action', {
-      to: "purvis.38@buckeyemail.osu.edu",
-      subject: "New Childcare Application Recieved",
+    to: staffEmail,
+      subject: 'New Childcare Application Recieved',
       heading: 'Infant and Toddler Application Recieved',
       message: 'A parent has completed an application!',
-      buttonText: 'DaycareURL',
-      buttonUrl: 'http://ourladyofbethlehem.org/waitlistapp',
-      messageAfterButton: "",
+      buttonText: 'Applications',
+      buttonUrl: 'http://ourladyofbethlehem.org/waitlistapp/applications',
+      messageAfterButton: '',
     });
     }
 

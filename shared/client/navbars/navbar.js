@@ -43,5 +43,8 @@ Template.navbar.events({
 
   'click #deleteUserButton': function(e) {
     Router.go('deleteuser')
+  },
+    'click #staffEmailButton': function(e) {
+    Router.go('staffEmail')
   }
 });
