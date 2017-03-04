@@ -2,7 +2,7 @@
   "public": {
     "appName": "OLB Waitlist Application",
     "appRootDir":"waitlistapp",
-    "infantTransMonth": 16,
+    "infantTransMonth": 18,
     "toddlerTransMonth": 30
   },
   "kadira": {

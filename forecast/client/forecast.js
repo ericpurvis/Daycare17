@@ -51,24 +51,24 @@ Template.forecast.helpers({
   },
   
   isMember:function(forecast) {
-    if(forecast.type=='MEMBER'){
+    if(forecast.type=='MEMBER' && forecast.status == 'WAITLIST'){
       return true;
     }
     return false;
   },
   
   isExisting:function(forecast) {
-    if(forecast.type=='EXISTING'){
+    if(forecast.type=='EXISTING' && forecast.status == 'WAITLIST'){
       return true;
     }
     return false;
   },
   
   isRegular:function(forecast) {
-    if(forecast.type=='REGULAR'){
+  if ( !(forecast.type=='MEMBER' && forecast.status == 'WAITLIST') && !(forecast.type=='EXISTING' && forecast.status == 'WAITLIST') ){
       return true;
-    }
-    return false;
+      }
+      return false
   }
   
 });
@@ -103,6 +103,7 @@ Template.forecast.events({
     var endDate = new Date(startDate);
     var timeFrame = parseInt(timeFrameString);
     endDate.setMonth(startDate.getMonth() + timeFrame);
+    var waitlistAdds =[];
     //console.log(startDate.getMonth());
     //console.log(startDate);
     //console.log(timeFrame);
@@ -115,7 +116,7 @@ Template.forecast.events({
     
     var id = Session.get("selectedClassroomId");  
     var classroom = Classrooms.findOne({_id: id}).type;
-    //var classroom;
+
     //pull students to look through;
     if(classroom =='INFANT'){
     var studentCursor = Students.find({classId: id},{sort: {moveDate: 1}});
@@ -128,7 +129,6 @@ Template.forecast.events({
     studentCursor.forEach(function(student){
       //console.log(student)
       //console.log(student)
-      //classroom=student.group;
       for(var i=0;i<student.daysEnrolled.length;i++){
         if("MONDAY" == student.daysEnrolled[i].day && student.group == classroom){
           mon++;
@@ -160,6 +160,7 @@ Template.forecast.events({
         friCount: String,
         details: String,
         type: String,
+        status: String,
       }
       
       if(student.moveDate > startDate && student.moveDate < endDate && classroom == "INFANT"){
@@ -172,6 +173,8 @@ Template.forecast.events({
         forecastModel.friCount = fri;
         forecastModel.details = student.details;
         forecastModel.type = student.type;
+        forecastModel.status = student.status;
+        
         for(var i=0;i<student.daysEnrolled.length;i++){
           if("MONDAY" == student.daysEnrolled[i].day){
             mon--;
@@ -195,8 +198,12 @@ Template.forecast.events({
           }
         }
         
+        //add model
         forecastArray[arrayCount] = forecastModel;
         arrayCount++;
+        
+        //SEE IF A STUDENT CAN BE ADDED FROM WAITLIST
+        //forecastArray = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAdds);
         
         //Else if we're dealing with the toddler class
         //Check if move date falls within the specified range
@@ -213,6 +220,7 @@ Template.forecast.events({
                forecastModel.friCount = fri;
                forecastModel.details = student.details;
                forecastModel.type = student.type;
+               forecastModel.status = student.status;
                
                //Check for each day if there are spots available. Increment if so
                for(var i=0;i<student.daysEnrolled.length;i++){
@@ -246,7 +254,10 @@ Template.forecast.events({
                      forecastModel.friCount = fri;
                    }
                  }
-             }   
+             }
+            //add model
+            forecastArray[arrayCount] = forecastModel;
+            arrayCount++; 
           }
           
           //If student is a toddler then print "without" and act decrement each day accordingly
@@ -259,6 +270,7 @@ Template.forecast.events({
             forecastModel.friCount = fri;
             forecastModel.details = student.details;
             forecastModel.type = student.type;
+            forecastModel.status = student.status;
             for(var i=0;i<student.daysEnrolled.length;i++){
               if("MONDAY" == student.daysEnrolled[i].day){
                 mon--;
@@ -281,19 +293,22 @@ Template.forecast.events({
                 forecastModel.friCount = fri;
               }
             }
+            
+            //add model
+            forecastArray[arrayCount] = forecastModel;
+            arrayCount++;
+            
+           //SEE IF A STUDENT CAN BE ADDED FROM WAITLIST
+          //forecastArray = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAdds);
+          
           }
           
-          //Do we still need this section?
-          forecastArray[arrayCount] = forecastModel;
-          arrayCount++;
           
       }else{
        //console.log("Student not in range");
       }
       
     });
-     
-     
      
      
      var forecastModel = {
@@ -305,6 +320,7 @@ Template.forecast.events({
         friCount: String,
         details: String,
         type: String,
+        status: String,
       }
 
     var available = 12;
@@ -319,6 +335,7 @@ Template.forecast.events({
     forecastModel.friCount = available - fri;
     forecastModel.details = "";
     forecastModel.type = "REGULAR";
+    forecastModel.status = "ENROLLED";
     forecastArray[arrayCount] = forecastModel;
    // console.log(forecastArray);
    // console.log(mon);
@@ -328,5 +345,10 @@ Template.forecast.events({
    // console.log(fri);
     return forecastArray;
   }
+  
+  
+  
+ 
+  
 
 
