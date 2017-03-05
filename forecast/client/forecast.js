@@ -199,11 +199,13 @@ Template.forecast.events({
         }
         
         //add model
+        console.log("arrayCount line 202" + arrayCount);
+        console.log("forecastArray line 203" + forecastArray);
         forecastArray[arrayCount] = forecastModel;
         arrayCount++;
         
         //SEE IF A STUDENT CAN BE ADDED FROM WAITLIST
-        //forecastArray = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAdds);
+        forecastArray = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAdds, student.group , student.order );
         
         //Else if we're dealing with the toddler class
         //Check if move date falls within the specified range
@@ -256,6 +258,8 @@ Template.forecast.events({
                  }
              }
             //add model
+            console.log("arrayCount line 261" + arrayCount);
+            console.log("forecastArray line 262" + forecastArray);
             forecastArray[arrayCount] = forecastModel;
             arrayCount++; 
           }
@@ -295,11 +299,13 @@ Template.forecast.events({
             }
             
             //add model
+            console.log("arrayCount line 302" + arrayCount);
+            console.log("forecastArray line 303" + forecastArray);
             forecastArray[arrayCount] = forecastModel;
             arrayCount++;
             
            //SEE IF A STUDENT CAN BE ADDED FROM WAITLIST
-          //forecastArray = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAdds);
+          forecastArray = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAdds,student.group , student.order );
           
           }
           
@@ -336,6 +342,8 @@ Template.forecast.events({
     forecastModel.details = "";
     forecastModel.type = "REGULAR";
     forecastModel.status = "ENROLLED";
+    console.log("arrayCount line 345" + arrayCount);
+    console.log("forecastArray line 346" + forecastArray);
     forecastArray[arrayCount] = forecastModel;
    // console.log(forecastArray);
    // console.log(mon);
@@ -346,8 +354,135 @@ Template.forecast.events({
     return forecastArray;
   }
   
+
+
+  /**
+   *This method checks the waitlist of the currently selected classroom and finds the first student that would be available to take the spot
+   * CALL THIS METHOD EVERYTIME A STUDENT TRANSITIONS OUT OF A CLASSROOM
+    **/
+  function checkWaitlist(classroom, dateAval,forecastArray,waitlistAdds, studentGroup, studentOrder)//pass array with students on waitlist already added during current createModel instance
+  {
   
-  
+    //save max values
+  var maxAllowed = 12;
+  if(classroom = "INFANT"){
+  maxAllowed = 8;
+  }
+ 
+  //get last entry for up-to-date availability
+  console.log("forecastArray.length line 373 " + (forecastArray.length - 1));
+  console.log("forecastArray line 374 " + forecastArray);
+  console.log("forecastArray[forecastArray.length - 1] line 374 " + forecastArray[forecastArray.length - 1]);
+  var lastEntry = forecastArray[forecastArray.length - 1];
+ 
+   console.log("lastEntry.monCount line 374 " + lastEntry.monCount);
+  var mon = lastEntry.monCount;
+    var tues = lastEntry.tueCount;
+    var wed = lastEntry.wedCount;
+    var thur = lastEntry.thuCount;
+    var fri = lastEntry.friCount;
+ 
+ 
+  console.log("hello 386");
+  console.log(studentGroup);
+  //pull all waitlist students waiting for current room
+  var waitlistStudents = Students.find({$or: [{status:"WAITLIST"}, {status:"PARTIALLY_ENROLLED"}], group: studentGroup, order: {$gt: studentOrder}}); 
+     console.log("hello 389");
+     console.log(waitlistStudents);
+    waitlistStudents.forEach(function(student){
+    console.log(student);
+        
+    //if the student desires to start before or after date of availability. 
+    if(student.startDate <= dateAval){
+    
+    //determine if any requested days could be added (variable)
+    var canBeAdded = false;
+    
+    var forecastModel = {
+       movements: String,
+       monCount: String,
+         tueCount:String,
+         wedCount:String,
+         thuCount: String,
+          friCount: String,
+          details: String,
+          type: String,
+        }
+      
+       //see what days the current student wants
+    for(var i=0;i<student.daysEnrolled.length;i++){
+              if("MONDAY" == student.daysWaitlisted[i].day){
+                if(mon<maxAllowed){
+                 mon++;
+                 forecastModel.monCount = mon;
+                 canBeAdded = true;
+                 }
+                }
+              if("TUESDAY" == student.daysWaitlisted[i].day){
+                if(tue<maxAllowed){
+                tues++;
+                forecastModel.tueCount = tues;
+                canBeAdded = true;
+                }
+              }
+              if("WEDNESDAY" == student.daysWaitlisted[i].day){
+                if(wed<maxAllowed){
+                wed++;
+                forecastModel.wedCount = wed;
+                canBeAdded = true;
+                }
+              }
+              if("THURSDAY" == student.daysWaitlisted[i].day){
+                if(thur<maxAllowed){
+                thur++;
+                forecastModel.thurCount = thur;
+                canBeAdded = true;
+                }
+              }
+              if("FRIDAY" == student.daysWaitlisted[i].day){
+                if(fri<maxAllowed){
+                fri++;
+                forecastModel.friCount = fri;
+                canBeAdded = true;
+                }
+              }
+     }
+     
+     //if the current waitlist can be added, add to array and end method
+     
+     //***SINCE STUDENTS ARE ONLY SORTED BY ORDER, THE SAME STUDENT ON THE TOP OF THE LIST
+     //WILL BE ADDED EVERY TIME THIS METHOD IS CALLED IF THE START DATE IS BEFORE OR AT THE DATE
+     //AVALABLE. TO FIX THIS, MAKE AN ARRAY INSIDE createModel() AND PASS IT TO THIS METHOD, 
+     //ADDING A STUDENTS ID TO IT EVERYTIME THEY ARE SUCESSFULLY PUT IN THE MODEL. THEN, ONE 
+     //LAST CHECK YOU WILL DO BEFORE ADDING TO THE MODEL IS MAKING SURE THEY HAVENT ALREADY BEEN 
+     //ADDED BEFORE, ie SEEING IF THERE ID IS IN THE ARRAY OF STUDENTS ALREADY ADDED. IF THEY ARE, 
+     //IGNORE THEM AND CONTINUE THROUGH THE FOR-EACH LOOP (sorted by order and filtered by current class)
+      
+     if(waitlistAdds.contains(student._id)){
+        canBeAdded = false;
+     }
+      
+     if(canBeAdded = true){
+          forecastModel.movements = "As of " + dateAval.toJSON().slice(0,10).replace(/-/g,'/') + " with " + student.firstName + " " + student.lastName;
+          forecastModel.monCount = mon;
+          forecastModel.tueCount = tues;
+          forecastModel.wedCount = wed;
+          forecastModel.thuCount = thur;
+          forecastModel.friCount = fri;
+          forecastModel.details = student.details;
+          forecastModel.type = student.type;
+          forecastModel.status = student.status;
+          waitlistAdds.push(student._id);
+          forecastArray.push(forecastModel);
+      
+     //add some unique attribute of student into array of successfully transitioned students.
+     }
+     
+    }
+
+   });
+   return forecastArray;
+}
  
   
 
