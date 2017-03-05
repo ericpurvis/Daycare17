@@ -205,8 +205,8 @@ Template.forecast.events({
         arrayCount++;
         
         //SEE IF A STUDENT CAN BE ADDED FROM WAITLIST
-        forecastArray = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAdds, student.group , student.order );
-        arrayCount = forecastArray.length - 1;
+        forecastArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAdds, student.group , student.order );
+        arrayCount = forecastArray.length;
         console.log("Students to add");
         console.log(forecastArray);
         //Else if we're dealing with the toddler class
@@ -308,7 +308,7 @@ Template.forecast.events({
             
             //SEE IF A STUDENT CAN BE ADDED FROM WAITLIST
             forecastArray = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAdds,student.group , student.order );
-            arrayCount = forecastArray.length - 1;
+            arrayCount = forecastArray.length;
           }
           
           
