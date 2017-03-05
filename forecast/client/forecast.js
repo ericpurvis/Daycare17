@@ -85,8 +85,10 @@ Template.forecast.events({
     Session.set("selectedTimeFrame",  tpl.$("#timeframe").val());
   },
   
-  'input #sdate': function (e, tpl) {
-    Session.set("forecastStartDate", e.target.sdate.value);
+  'keypress': function (e, tpl) {
+    if (e.which === 13) {
+    Session.set("forecastStartDate", new Date(tpl.$("#sdate").val()));
+    }
   }
   });
   /**
