@@ -1,9 +1,12 @@
 <template name="forecast">
   <h2> Forecast </h2>
-  
   <!-- Forecast timeframe dropdown -->
       <div class="row">
-	   
+     
+      <script type="text/javascript" src="libs/FileSaver/FileSaver.min.js"></script>
+      <script type="text/javascript" src="libs/js-xlsx/xlsx.core.min.js"></script>
+      <script type="text/javascript" src="tableExport.min.js"></script>
+
         <div class="form-group col-md-3">
 	      <label>Time Frame</label>
           <select class="form-control" id="timeframe">
@@ -27,9 +30,9 @@
 	    </div>
 	    <div class="col-md-4">
           <div class="form-group">
-	         <label>Export Excel</label>
+          <label>Export Excel</label>
 	         <div>
-			 	<button type="button"  class="btn btn-primary add" id="export-table">Export</button>
+			 	<a onClick = "$('#forecastTable').tableExport({type:'xls',fileName: 'forecastExport'});">Export</a>
 	         </div>
           </div>
 	    </div>
@@ -45,7 +48,7 @@
         {{/each}}
       </ul>
 
-    <table class="table table-bordered table-responsive">
+    <table class="table table-bordered table-responsive" id= "forecastTable">
     <thead>
       <tr>
         <th>Dates and Movements</th>
@@ -97,6 +100,6 @@
       {{/each}}	
     </tbody>
 </table>
-    </div>
+</div>
   </div>
 </template>
