@@ -81,6 +81,10 @@ Template.forecast.events({
     
   },
   
+  'click .export-table': function (){
+      ("table").tableExport({formats: "xls"});
+  },
+  
   'change #timeframe': function (e,tpl) {
     Session.set("selectedTimeFrame",  tpl.$("#timeframe").val());
   },
