@@ -13,8 +13,13 @@ Template.staffEmail.events({
    //window.console.warn(StaffEmail.findOne({num:1}).email);
 	   
      //window.console.warn("3");
-
+   
+ 
+  
    Meteor.call('setStaffEmail',  staffEmailId);
+   //Modal.show('staffEmailModal');
+  
   }
   }
 );
+
