@@ -105,6 +105,7 @@ Template.forecast.events({
    */
   function createForecastModel(startDate, timeFrameString)
   {
+    console.log("line 108");
     var forecastArray =[];
     var endDate = new Date(startDate);
     var timeFrame = parseInt(timeFrameString);
@@ -122,12 +123,14 @@ Template.forecast.events({
     
     var id = Session.get("selectedClassroomId");  
     var classroom = Classrooms.findOne({_id: id}).type;
-
+console.log("line 126");
     //pull students to look through;
     if(classroom =='INFANT'){
     var studentCursor = Students.find({classId: id},{sort: {moveDate: 1}});
+    console.log("line 130");
     }else{
     var studentCursor = Students.find({status:"ENROLLED"},{sort: {moveDate: 1}});
+    console.log("line 133");
     }
     
     
@@ -135,6 +138,7 @@ Template.forecast.events({
     studentCursor.forEach(function(student){
       //console.log(student)
       //console.log(student)
+      console.log("line 140");
       for(var i=0;i<student.daysEnrolled.length;i++){
         if("MONDAY" == student.daysEnrolled[i].day && student.group == classroom){
           mon++;
@@ -153,7 +157,7 @@ Template.forecast.events({
         }
       }
     });
-    
+    console.log("line 160");
     var arrayCount = 0;
     studentCursor.forEach(function(student){
       var forecastModel = {
@@ -168,10 +172,14 @@ Template.forecast.events({
         status: String,
         movementDate: Date
       }
-      
+      console.log("line 175");
+      console.log("line 176");
+      console.log(student.moveDate);
+      console.log("line 178");
       if(student.moveDate > startDate && student.moveDate < endDate && classroom == "INFANT"){
-        //console.log("Student ARE in range");
+          console.log("line 180");
         forecastModel.movements = "As of " + student.moveDate.toJSON().slice(0,10).replace(/-/g,'/') + " without " + student.firstName + " " + student.lastName;
+          console.log("line 182");
         forecastModel.movementDate = student.moveDate;
         forecastModel.monCount = mon;
         forecastModel.tueCount = tues;
@@ -181,7 +189,7 @@ Template.forecast.events({
         forecastModel.details = student.details;
         forecastModel.type = student.type;
         forecastModel.status = student.status;
-        
+        console.log("line 188");
         for(var i=0;i<student.daysEnrolled.length;i++){
           if("MONDAY" == student.daysEnrolled[i].day){
             mon--;
@@ -204,7 +212,7 @@ Template.forecast.events({
             forecastModel.friCount = fri;
           }
         }
-        
+        console.log("line 211");
         //add model
         console.log("arrayCount line 202" + arrayCount);
         console.log("forecastArray line 203" + forecastArray);
@@ -236,7 +244,7 @@ Template.forecast.events({
         //Check if move date falls within the specified range
         //Pull all students (infant and toddler) that are enrolled and fit this range
       }else if(student.moveDate > startDate && student.moveDate < endDate && classroom == "TODDLER"){
-          
+          console.log("line 243");
           //If student is an infant then print "with"
           if (student.group=="INFANT"){
                forecastModel.movements = "As of " + student.moveDate.toJSON().slice(0,10).replace(/-/g,'/') + " with " + student.firstName + " " + student.lastName;
@@ -324,7 +332,7 @@ Template.forecast.events({
                 forecastModel.friCount = fri;
               }
             }
-            
+            console.log("line 331");
             //add model
             console.log("arrayCount line 302" + arrayCount);
             console.log("forecastArray line 303" + forecastArray);
@@ -448,7 +456,7 @@ Template.forecast.events({
     console.log("forecastArray line 346" + forecastArray);
     forecastArray.push(forecastModel);
    // console.log(forecastArray);
-   // console.log(mon);
+   console.log("test 451");
    // console.log(tues);
    // console.log(wed);
    // console.log(thur);
@@ -580,7 +588,7 @@ Template.forecast.events({
             //IGNORE THEM AND CONTINUE THROUGH THE FOR-EACH LOOP (sorted by order and filtered by current class)
             console.log(student._id);
             console.log(waitlistAdds);
-            if(waitlistAdds.length > 0 && waitlistAdds != null && waitlistAdds.includes(student._id)){
+            if(waitlistAdds != null && waitlistAdds.length > 0  && waitlistAdds.includes(student._id)){
                 canBeAdded = false;
             }
               console.log(canBeAdded);
