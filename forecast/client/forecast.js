@@ -177,14 +177,8 @@ console.log("line 126");
       console.log(student.moveDate);
       console.log("line 178");
       if(student.moveDate > startDate && student.moveDate < endDate && classroom == "INFANT"){
-<<<<<<< HEAD
-          console.log("line 180");
-        forecastModel.movements = "As of " + student.moveDate.toJSON().slice(0,10).replace(/-/g,'/') + " without " + student.firstName + " " + student.lastName;
-          console.log("line 182");
-=======
         //console.log("Student ARE in range");
         forecastModel.movements = "As of " + formatDate(student.moveDate) + " without " + student.firstName + " " + student.lastName;
->>>>>>> eeaba7231c3cac552eb37a2280cecc128d77998e
         forecastModel.movementDate = student.moveDate;
         forecastModel.monCount = mon;
         forecastModel.tueCount = tues;
