@@ -177,9 +177,14 @@ console.log("line 126");
       console.log(student.moveDate);
       console.log("line 178");
       if(student.moveDate > startDate && student.moveDate < endDate && classroom == "INFANT"){
+<<<<<<< HEAD
           console.log("line 180");
         forecastModel.movements = "As of " + student.moveDate.toJSON().slice(0,10).replace(/-/g,'/') + " without " + student.firstName + " " + student.lastName;
           console.log("line 182");
+=======
+        //console.log("Student ARE in range");
+        forecastModel.movements = "As of " + formatDate(student.moveDate) + " without " + student.firstName + " " + student.lastName;
+>>>>>>> eeaba7231c3cac552eb37a2280cecc128d77998e
         forecastModel.movementDate = student.moveDate;
         forecastModel.monCount = mon;
         forecastModel.tueCount = tues;
@@ -247,7 +252,7 @@ console.log("line 126");
           console.log("line 243");
           //If student is an infant then print "with"
           if (student.group=="INFANT"){
-               forecastModel.movements = "As of " + student.moveDate.toJSON().slice(0,10).replace(/-/g,'/') + " with " + student.firstName + " " + student.lastName;
+               forecastModel.movements = "As of " + formatDate(student.moveDate) + " with " + student.firstName + " " + student.lastName;
                 forecastModel.movementDate = student.moveDate;
                forecastModel.monCount = mon;
                forecastModel.tueCount = tues;
@@ -300,7 +305,7 @@ console.log("line 126");
           
           //If student is a toddler then print "without" and act decrement each day accordingly
           else{
-            forecastModel.movements = "As of " + student.moveDate.toJSON().slice(0,10).replace(/-/g,'/') + " without " + student.firstName + " " + student.lastName;
+            forecastModel.movements = "As of " + formatDate(student.moveDate) + " without " + student.firstName + " " + student.lastName;
             forecastModel.movementDate = student.moveDate;
             forecastModel.monCount = mon;
             forecastModel.tueCount = tues;
@@ -594,7 +599,7 @@ console.log("line 126");
               console.log(canBeAdded);
             if(canBeAdded == true){
                   console.log("before movements");
-                  forecastModel.movements = "As of " + dateAval.toJSON().slice(0,10).replace(/-/g,'/') + " with " + student.firstName + " " + student.lastName;
+                  forecastModel.movements = "As of " + formatDate(student.moveDate) + " with " + student.firstName + " " + student.lastName;
                   forecastModel.movementDate = dateAval;
                   console.log(forecastModel.movements);
                   forecastModel.monCount = mon;
@@ -665,7 +670,7 @@ function GetWaitlistMoveOut(waitlistAdds, startDate, endDate)
                   type: String,
                   movementDate: Date
                 };
-              forecastModel.movements = "As of " + student.moveDate.toJSON().slice(0,10).replace(/-/g,'/') + " without " + student.firstName + " " + student.lastName;
+              forecastModel.movements = "As of " + formatDate(student.moveDate) + " without " + student.firstName + " " + student.lastName;
               console.log(forecastModel.movements);
               forecastModel.movementDate = student.moveDate;
               forecastModel.details = student.details;
@@ -716,6 +721,16 @@ function GetWaitlistMoveOut(waitlistAdds, startDate, endDate)
   console.log(waitlistOutArray);
   return waitlistOutArray;
 }
+
+function formatDate(date){
+	var m = date.getMonth()+1;
+	var d = date.getDate();
+	var y = date.getFullYear();
+
+	return m + '/' + d + '/' + y;
+}
+
+
  
   
 
