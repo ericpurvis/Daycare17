@@ -496,7 +496,7 @@ console.log("line 126");
     console.log(studentGroup);
     console.log(studentOrder);
     //pull all waitlist students waiting for current room
-    var waitlistStudents = Students.find({$or: [{status:"WAITLIST"}, {status:"PARTIALLY_ENROLLED"}], group: studentGroup}); 
+    var waitlistStudents = Students.find({$or: [{status:"WAITLIST"}, {status:"PARTIALLY_ENROLLED"}], group: studentGroup}, {sort:{order:1}}); 
     console.log("hello 389");
     console.log(waitlistStudents);
     waitlistStudents.forEach(function(student){
