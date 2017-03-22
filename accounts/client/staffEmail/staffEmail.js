@@ -14,10 +14,12 @@ Template.staffEmail.events({
 	   
      //window.console.warn("3");
    
- 
+    e.preventDefault();
   
    Meteor.call('setStaffEmail',  staffEmailId);
-   //Modal.show('staffEmailModal');
+   Modal.show('staffEmailModal');
+   scroll(0,0);
+    e.target.reset();
   
   }
   }
