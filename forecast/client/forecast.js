@@ -593,7 +593,7 @@ console.log("line 126");
               console.log(canBeAdded);
             if(canBeAdded == true){
                   console.log("before movements");
-                  forecastModel.movements = "As of " + formatDate(student.moveDate) + " with " + student.firstName + " " + student.lastName;
+                  forecastModel.movements = "As of " + formatDate(dateAval) + " with " + student.firstName + " " + student.lastName;
                   forecastModel.movementDate = dateAval;
                   console.log(forecastModel.movements);
                   forecastModel.monCount = mon;
@@ -664,7 +664,7 @@ function GetWaitlistMoveOut(waitlistAdds, startDate, endDate)
                   type: String,
                   movementDate: Date
                 };
-              forecastModel.movements = "As of " + formatDate(student.moveDate) + " without " + student.firstName + " " + student.lastName;
+              forecastModel.movements = "As of " + formatDate(dateAval) + " without " + student.firstName + " " + student.lastName;
               console.log(forecastModel.movements);
               forecastModel.movementDate = student.moveDate;
               forecastModel.details = student.details;
