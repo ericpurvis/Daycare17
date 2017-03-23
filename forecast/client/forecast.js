@@ -664,7 +664,7 @@ function GetWaitlistMoveOut(waitlistAdds, startDate, endDate)
                   type: String,
                   movementDate: Date
                 };
-              forecastModel.movements = "As of " + formatDate(dateAval) + " without " + student.firstName + " " + student.lastName;
+              forecastModel.movements = "As of " + formatDate(student.moveDate) + " without " + student.firstName + " " + student.lastName;
               console.log(forecastModel.movements);
               forecastModel.movementDate = student.moveDate;
               forecastModel.details = student.details;
