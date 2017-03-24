@@ -436,7 +436,7 @@ Meteor.methods({
 
 PrettyEmail.send('call-to-action', {
     to: staffEmail,
-      subject: 'New Childcare Application Recieved',
+      subject: 'Infant and Toddler Application Recieved',
       heading: 'Infant and Toddler Application Recieved',
       message: 'A parent has completed an application!',
       buttonText: 'Applications',
