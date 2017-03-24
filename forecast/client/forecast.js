@@ -111,10 +111,6 @@ Template.forecast.events({
     var timeFrame = parseInt(timeFrameString);
     endDate.setMonth(startDate.getMonth() + timeFrame);
     var waitlistAdds =[];
-    //console.log(startDate.getMonth());
-    //console.log(startDate);
-    //console.log(timeFrame);
-    //console.log(endDate);
     var mon = 0;
     var tues = 0;
     var wed = 0;
@@ -136,8 +132,6 @@ console.log("line 126");
     
     //collect current enroll count on selected class ID
     studentCursor.forEach(function(student){
-      //console.log(student)
-      //console.log(student)
       console.log("line 140");
       for(var i=0;i<student.daysEnrolled.length;i++){
         if("MONDAY" == student.daysEnrolled[i].day && student.group == classroom){
@@ -246,8 +240,28 @@ console.log("line 126");
           console.log("line 243");
           //If student is an infant then print "with"
           if (student.group=="INFANT"){
-               forecastModel.movements = "As of " + formatDate(student.moveDate) + " with " + student.firstName + " " + student.lastName;
-                forecastModel.movementDate = student.moveDate;
+               forecastModel.movements = "As of " + formatDate(student.moveDate) + " with " + student.firstName + " " + student.lastName + " (Days Enrolled:";
+
+               for(var i=0;i<student.daysEnrolled.length;i++){
+                	if("MONDAY" == student.daysEnrolled[i].day){
+            		  forecastModel.movements += " M ";
+          	        }
+          	   		if("TUESDAY" == student.daysEnrolled[i].day){
+                      forecastModel.movements += " T ";
+                    }
+                    if("WEDNESDAY" == student.daysEnrolled[i].day){
+                      forecastModel.movements += " W ";
+                    }
+                    if("THURSDAY" == student.daysEnrolled[i].day){
+                      forecastModel.movements += " TH ";
+                    }
+                    if("FRIDAY" == student.daysEnrolled[i].day){
+                      forecastModel.movements += " F ";
+                    }
+               }
+               forecastModel.movements += ")";
+               
+               forecastModel.movementDate = student.moveDate;
                forecastModel.monCount = mon;
                forecastModel.tueCount = tues;
                forecastModel.wedCount = wed;
@@ -454,12 +468,8 @@ console.log("line 126");
     console.log("arrayCount line 345" + arrayCount);
     console.log("forecastArray line 346" + forecastArray);
     forecastArray.push(forecastModel);
-   // console.log(forecastArray);
    console.log("test 451");
-   // console.log(tues);
-   // console.log(wed);
-   // console.log(thur);
-   // console.log(fri);
+
     return forecastArray;
   }
   
@@ -575,16 +585,6 @@ console.log("line 126");
           }
             console.log("canBeAdded");
             console.log(canBeAdded);
-            
-            //if the current waitlist can be added, add to array and end method
-            
-            //***SINCE STUDENTS ARE ONLY SORTED BY ORDER, THE SAME STUDENT ON THE TOP OF THE LIST
-            //WILL BE ADDED EVERY TIME THIS METHOD IS CALLED IF THE START DATE IS BEFORE OR AT THE DATE
-            //AVALABLE. TO FIX THIS, MAKE AN ARRAY INSIDE createModel() AND PASS IT TO THIS METHOD, 
-            //ADDING A STUDENTS ID TO IT EVERYTIME THEY ARE SUCESSFULLY PUT IN THE MODEL. THEN, ONE 
-            //LAST CHECK YOU WILL DO BEFORE ADDING TO THE MODEL IS MAKING SURE THEY HAVENT ALREADY BEEN 
-            //ADDED BEFORE, ie SEEING IF THERE ID IS IN THE ARRAY OF STUDENTS ALREADY ADDED. IF THEY ARE, 
-            //IGNORE THEM AND CONTINUE THROUGH THE FOR-EACH LOOP (sorted by order and filtered by current class)
             console.log(student._id);
             console.log(waitlistAdds);
             if(waitlistAdds != null && waitlistAdds.length > 0  && waitlistAdds.includes(student._id)){
@@ -593,7 +593,27 @@ console.log("line 126");
               console.log(canBeAdded);
             if(canBeAdded == true){
                   console.log("before movements");
-                  forecastModel.movements = "As of " + formatDate(dateAval) + " with " + student.firstName + " " + student.lastName;
+                  forecastModel.movements = "As of " + formatDate(dateAval) + " with " + student.firstName + " " + student.lastName + " (Days Waitlisted:";
+                  
+                  for(var i=0;i<student.daysRequested.length;i++){
+                	if("MONDAY" == student.daysWaitlisted[i].day){
+            		  forecastModel.movements += " M ";
+          	        }
+          	   		if("TUESDAY" == student.daysRequested[i].day){
+                      forecastModel.movements += " T ";
+                    }
+                    if("WEDNESDAY" == student.daysRequested[i].day){
+                      forecastModel.movements += " W ";
+                    }
+                    if("THURSDAY" == student.daysRequested[i].day){
+                      forecastModel.movements += " TH ";
+                    }
+                    if("FRIDAY" == student.daysRequested[i].day){
+                      forecastModel.movements += " F ";
+                    }
+                  }
+                  forecastModel.movements += ")";
+               
                   forecastModel.movementDate = dateAval;
                   console.log(forecastModel.movements);
                   forecastModel.monCount = mon;
@@ -621,17 +641,6 @@ function GetWaitlistMoveOut(waitlistAdds, startDate, endDate)
   console.log("waitlistAdds");
   console.log(waitlistAdds);
   console.log(waitlistAdds[0]);
-
-  // var forecastModel = {
-  //         movements: String,
-  //         monCount: String,
-  //           tueCount:String,
-  //           wedCount:String,
-  //           thuCount: String,
-  //             friCount: String,
-  //             details: String,
-  //             type: String,
-  //           };
 
   var waitlistOutArray = [];
   for(var count = 0; count < waitlistAdds.length; count++){
