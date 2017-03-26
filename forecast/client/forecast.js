@@ -9,6 +9,7 @@ Template.forecast.onCreated(function(){
     Session.set("selectedTimeFrame", "3");
     var today = new Date();
     Session.set("forecastStartDate", today);
+    Session.set("forecastArray",createForecastModel(Session.get("forecastStartDate"),Session.get("selectedTimeFrame")));
   }
 });
 
@@ -81,9 +82,6 @@ Template.forecast.events({
     
   },
   
- // 'click .export-table': function (){
-  //    $("forecastTable").tableExport({filename: "forecasts",formats: "xls"});
- // },
   
   'change #timeframe': function (e,tpl) {
     Session.set("selectedTimeFrame",  tpl.$("#timeframe").val());
@@ -121,7 +119,7 @@ Template.forecast.events({
     var classroom = Classrooms.findOne({_id: id}).type;
 console.log("line 126");
     //pull students to look through;
-    if(classroom =='INFANT'){
+    if(classroom =="INFANT"){
     var studentCursor = Students.find({classId: id},{sort: {moveDate: 1}});
     console.log("line 130");
     }else{
@@ -171,7 +169,7 @@ console.log("line 126");
       console.log(student.moveDate);
       console.log("line 178");
       if(student.moveDate > startDate && student.moveDate < endDate && classroom == "INFANT"){
-        //console.log("Student ARE in range");
+
         forecastModel.movements = "As of " + formatDate(student.moveDate) + " without " + student.firstName + " " + student.lastName;
         forecastModel.movementDate = student.moveDate;
         forecastModel.monCount = mon;
@@ -540,7 +538,7 @@ console.log("line 126");
             console.log(student.daysWaitlisted);
             console.log(student.daysWaitlisted.length);
             //see what days the current student wants
-          if(!waitlistAdds.includes(student._id)){
+          if(waitlistAdds.indexOf(student._id) < 0){
             for(var i=0;i<student.daysWaitlisted.length;i++){
               console.log(i);
               console.log(maxAllowed);
@@ -587,7 +585,7 @@ console.log("line 126");
             console.log(canBeAdded);
             console.log(student._id);
             console.log(waitlistAdds);
-            if(waitlistAdds != null && waitlistAdds.length > 0  && waitlistAdds.includes(student._id)){
+            if(waitlistAdds != null && waitlistAdds.length > 0  && waitlistAdds.indexOf(student._id)>=0){
                 canBeAdded = false;
             }
               console.log(canBeAdded);
