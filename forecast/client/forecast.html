@@ -48,6 +48,7 @@
     <thead>
       <tr>
         <th>Dates and Movements</th>
+        <th>Days Requested</th>
         {{#each daysOfWeek}}
           <th>{{this}}</th>
         {{/each}}
@@ -60,6 +61,7 @@
     	{{#if isMember forecast  }}
     	<tr bgcolor= "red">
     	<td>{{forecast.movements}}</td>
+    	<td>{{forecast.daysReq}}</td>
     		<td>{{forecast.monCount}}</td>
     		<td>{{forecast.tueCount}}</td>
     		<td>{{forecast.wedCount}}</td>
@@ -72,6 +74,7 @@
     	{{#if isExisting forecast }}
     	<tr bgcolor= "yellow">
     	<td>{{forecast.movements}}</td>
+    	<td>{{forecast.daysReq}}</td>
     		<td>{{forecast.monCount}}</td>
     		<td>{{forecast.tueCount}}</td>
     		<td>{{forecast.wedCount}}</td>
@@ -84,6 +87,7 @@
     	{{#if isRegular forecast  }}
     	<tr>
     	<td>{{forecast.movements}}</td>
+    	<td>{{forecast.daysReq}}</td>
     		<td>{{forecast.monCount}}</td>
     		<td>{{forecast.tueCount}}</td>
     		<td>{{forecast.wedCount}}</td>

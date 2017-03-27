@@ -25,7 +25,9 @@ Template.applications.events({
 
     // call the service
     Meteor.call("createNewApplicationSession", params, applicationSentCompleted)
-      
+    Modal.show('ApplicationSentSuccessModal');
+   scroll(0,0);
+   e.target.reset();  
   }
 });
 

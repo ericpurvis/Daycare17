@@ -19,7 +19,7 @@ Template.staffEmail.events({
    Meteor.call('setStaffEmail',  staffEmailId);
    Modal.show('staffEmailModal');
    scroll(0,0);
-    e.target.reset();
+   e.target.reset();
   
   }
   }

@@ -154,6 +154,7 @@ console.log("line 126");
     studentCursor.forEach(function(student){
       var forecastModel = {
         movements: String,
+        daysReq:String,
         monCount: String,
         tueCount:String,
         wedCount:String,
@@ -171,6 +172,7 @@ console.log("line 126");
       if(student.moveDate > startDate && student.moveDate < endDate && classroom == "INFANT"){
 
         forecastModel.movements = "As of " + formatDate(student.moveDate) + " without " + student.firstName + " " + student.lastName;
+        forecastModel.daysReq = " ";
         forecastModel.movementDate = student.moveDate;
         forecastModel.monCount = mon;
         forecastModel.tueCount = tues;
@@ -238,26 +240,26 @@ console.log("line 126");
           console.log("line 243");
           //If student is an infant then print "with"
           if (student.group=="INFANT"){
-               forecastModel.movements = "As of " + formatDate(student.moveDate) + " with " + student.firstName + " " + student.lastName + " (Days Enrolled:";
+               forecastModel.movements = "As of " + formatDate(student.moveDate) + " with " + student.firstName + " " + student.lastName;
+               forecastModel.daysReq ="Days Enrolled: ";
 
-               for(var i=0;i<student.daysEnrolled.length;i++){
-                	if("MONDAY" == student.daysEnrolled[i].day){
-            		  forecastModel.movements += " M ";
+               for(var x=0;x<student.daysEnrolled.length;x++){
+                	if("MONDAY" == student.daysEnrolled[x].day){
+            		  forecastModel.daysReq += " M ";
           	        }
-          	   		if("TUESDAY" == student.daysEnrolled[i].day){
-                      forecastModel.movements += " T ";
+          	   		if("TUESDAY" == student.daysEnrolled[x].day){
+                      forecastModel.daysReq += " T ";
                     }
-                    if("WEDNESDAY" == student.daysEnrolled[i].day){
-                      forecastModel.movements += " W ";
+                    if("WEDNESDAY" == student.daysEnrolled[x].day){
+                      forecastModel.daysReq += " W ";
                     }
-                    if("THURSDAY" == student.daysEnrolled[i].day){
-                      forecastModel.movements += " TH ";
+                    if("THURSDAY" == student.daysEnrolled[x].day){
+                      forecastModel.daysReq += " TH ";
                     }
-                    if("FRIDAY" == student.daysEnrolled[i].day){
-                      forecastModel.movements += " F ";
+                    if("FRIDAY" == student.daysEnrolled[x].day){
+                      forecastModel.daysReq += " F ";
                     }
-               }
-               forecastModel.movements += ")";
+                  }
                
                forecastModel.movementDate = student.moveDate;
                forecastModel.monCount = mon;
@@ -312,6 +314,7 @@ console.log("line 126");
           //If student is a toddler then print "without" and act decrement each day accordingly
           else{
             forecastModel.movements = "As of " + formatDate(student.moveDate) + " without " + student.firstName + " " + student.lastName;
+            forecastModel.daysReq =" ";
             forecastModel.movementDate = student.moveDate;
             forecastModel.monCount = mon;
             forecastModel.tueCount = tues;
@@ -439,6 +442,7 @@ console.log("line 126");
      }
      var forecastModel = {
         movements: String,
+        daysReq: String,
         monCount: String,
         tueCount:String,
         wedCount:String,
@@ -455,6 +459,7 @@ console.log("line 126");
       available = 8;
     }
     forecastModel.movements = "Spots Available:";
+    forecastModel.daysReq = " ";
     forecastModel.monCount = available - forecastArray[forecastArray.length-1].monCount;
     forecastModel.tueCount = available - forecastArray[forecastArray.length-1].tueCount;
     forecastModel.wedCount = available - forecastArray[forecastArray.length-1].wedCount;
@@ -521,10 +526,13 @@ console.log("line 126");
         if(student.startDate <= dateAval){
           
           //determine if any requested days could be added (variable)
+          
+          var atLeastTwoDays = 0;
           var canBeAdded = false;
           
           var forecastModel = {
             movements: String,
+            daysReq: String,
             monCount: String,
               tueCount:String,
               wedCount:String,
@@ -545,37 +553,52 @@ console.log("line 126");
               console.log(mon);
               if("MONDAY" == student.daysWaitlisted[i].day){
                 if(mon<maxAllowed){
+                  atLeastTwoDays++;
                   mon++;
                   forecastModel.monCount = mon;
-                  canBeAdded = true;
+                  if(atLeastTwoDays >=2){
+                  	canBeAdded = true;
+                  }
                 }
               }
               else if("TUESDAY" == student.daysWaitlisted[i].day){
                 if(tues<maxAllowed){
+                  atLeastTwoDays++;
                   tues++;
                   forecastModel.tueCount = tues;
-                  canBeAdded = true;
+                  if(atLeastTwoDays >=2){
+                  	canBeAdded = true;
+                  }
                 }
               }
               else if("WEDNESDAY" == student.daysWaitlisted[i].day){
                 if(wed<maxAllowed){
+                  atLeastTwoDays++;
                   wed++;
                   forecastModel.wedCount = wed;
-                  canBeAdded = true;
+                  if(atLeastTwoDays >=2){
+                  	canBeAdded = true;
+                  }
                 }
               }
               else if("THURSDAY" == student.daysWaitlisted[i].day){
                 if(thur<maxAllowed){
+                  atLeastTwoDays++;
                   thur++;
                   forecastModel.thuCount = thur;
-                  canBeAdded = true;
+                  if(atLeastTwoDays >=2){
+                  	canBeAdded = true;
+                  }
                 }
               }
               else if("FRIDAY" == student.daysWaitlisted[i].day){
                 if(fri<maxAllowed){
+                  atLeastTwoDays++;
                   fri++;
                   forecastModel.friCount = fri;
-                  canBeAdded = true;
+                  if(atLeastTwoDays >=2){
+                  	canBeAdded = true;
+                  }
                 }
               }
               console.log(i);
@@ -591,27 +614,27 @@ console.log("line 126");
               console.log(canBeAdded);
             if(canBeAdded == true){
                   console.log("before movements");
-                  forecastModel.movements = "As of " + formatDate(dateAval) + " with " + student.firstName + " " + student.lastName + " (Days Waitlisted:";
+                  forecastModel.movements = "As of " + formatDate(dateAval) + " with " + student.firstName + " " + student.lastName;
+                  forecastModel.daysReq ="Days Waitlisted: ";
                   
-                  for(var i=0;i<student.daysRequested.length;i++){
-                	if("MONDAY" == student.daysWaitlisted[i].day){
-            		  forecastModel.movements += " M ";
+                  for(var x=0;x<student.daysWaitlisted.length;x++){
+                	if("MONDAY" == student.daysWaitlisted[x].day){
+            		  forecastModel.daysReq += " M ";
           	        }
-          	   		if("TUESDAY" == student.daysRequested[i].day){
-                      forecastModel.movements += " T ";
+          	   		if("TUESDAY" == student.daysWaitlisted[x].day){
+                      forecastModel.daysReq += " T ";
                     }
-                    if("WEDNESDAY" == student.daysRequested[i].day){
-                      forecastModel.movements += " W ";
+                    if("WEDNESDAY" == student.daysWaitlisted[x].day){
+                      forecastModel.daysReq += " W ";
                     }
-                    if("THURSDAY" == student.daysRequested[i].day){
-                      forecastModel.movements += " TH ";
+                    if("THURSDAY" == student.daysWaitlisted[x].day){
+                      forecastModel.daysReq += " TH ";
                     }
-                    if("FRIDAY" == student.daysRequested[i].day){
-                      forecastModel.movements += " F ";
+                    if("FRIDAY" == student.daysWaitlisted[x].day){
+                      forecastModel.daysReq += " F ";
                     }
-                  }
-                  forecastModel.movements += ")";
-               
+                  }  
+
                   forecastModel.movementDate = dateAval;
                   console.log(forecastModel.movements);
                   forecastModel.monCount = mon;
@@ -662,6 +685,7 @@ function GetWaitlistMoveOut(waitlistAdds, startDate, endDate)
             if(student.moveDate < endDate){
                 var forecastModel = {
               movements: String,
+              daysReq: String,
               monCount: String,
                 tueCount:String,
                 wedCount:String,
@@ -673,6 +697,7 @@ function GetWaitlistMoveOut(waitlistAdds, startDate, endDate)
                 };
               forecastModel.movements = "As of " + formatDate(student.moveDate) + " without " + student.firstName + " " + student.lastName;
               console.log(forecastModel.movements);
+              forecastModel.daysReq = " ";
               forecastModel.movementDate = student.moveDate;
               forecastModel.details = student.details;
               forecastModel.type = student.type;
