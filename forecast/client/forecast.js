@@ -115,7 +115,6 @@ Template.forecast.events({
     var fri = 0;
     var id = Session.get("selectedClassroomId");  
     var classroom = Classrooms.findOne({_id: id}).type;
-console.log("line 126");
     //pull students to look through;
     if(classroom =="INFANT"){
     var studentCursor = Students.find({classId: id},{sort: {moveDate: 1}});
@@ -149,6 +148,35 @@ console.log("line 126");
     var arrayCount = 0;
     
     
+    //initial totals line
+    var initTotalsModel = {
+        movements: String,
+        daysReq:String,
+        monCount: String,
+        tueCount:String,
+        wedCount:String,
+        thuCount: String,
+        friCount: String,
+        details: String,
+        type: String,
+        status: String,
+        movementDate: Date
+      }
+      
+        initTotalsModel.movements = "CURRENT CLASSROOM TOTALS: ";
+        initTotalsModel.daysReq = " ";
+        initTotalsModel.movementDate = " ";
+        initTotalsModel.monCount = mon;
+        initTotalsModel.tueCount = tues;
+        initTotalsModel.wedCount = wed;
+        initTotalsModel.thuCount = thur;
+        initTotalsModel.friCount = fri;
+        initTotalsModel.details = " ";
+        initTotalsModel.type = "REGULAR";
+        initTotalsModel.status = " ";
+        forecastArray.push(initTotalsModel);
+      
+      
     studentCursor.forEach(function(student){
       
       var forecastModel = {
@@ -165,7 +193,8 @@ console.log("line 126");
         movementDate: Date
       }
       
-    if(forecastArray.length == 0){
+    //init check of waitlist students
+    if(forecastArray.length == 1){
 	var initWaitlistArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAdds, classroom, "1" );
 	if(initWaitlistArray.length > 0){
 		for(var i = 0; i < initWaitlistArray.length; i++){
@@ -503,7 +532,7 @@ console.log("line 126");
     if(classroom == 'INFANT'){
       available = 8;
     }
-    forecastModel.movements = "Spots Available:";
+    forecastModel.movements = "SPOTS AVAILABLE:";
     forecastModel.daysReq = " ";
     forecastModel.monCount = available - forecastArray[forecastArray.length-1].monCount;
     forecastModel.tueCount = available - forecastArray[forecastArray.length-1].tueCount;
@@ -544,38 +573,14 @@ console.log("line 126");
   
     //get last entry for up-to-date availability
 
-    if(forecastArray.length > 0){
-      	var lastEntry = forecastArray[forecastArray.length - 1];
-      	mon = lastEntry.monCount;
-      	tues = lastEntry.tueCount;
-      	wed = lastEntry.wedCount;
-      	thur = lastEntry.thuCount;
-      	fri = lastEntry.friCount;
+    var lastEntry = forecastArray[forecastArray.length - 1];
+    mon = lastEntry.monCount;
+    tues = lastEntry.tueCount;
+    wed = lastEntry.wedCount;
+    thur = lastEntry.thuCount;
+    fri = lastEntry.friCount;
   
-    }
-    else{
-    	var initCursor = Students.find({status:"ENROLLED"},{sort: {moveDate: 1}});
-		initCursor.forEach(function(student){
-      	for(var i=0;i<student.daysEnrolled.length;i++){
-        	if("MONDAY" == student.daysEnrolled[i].day && student.group == classroom){
-          		mon++;
-        	}
-        	if("TUESDAY" == student.daysEnrolled[i].day && student.group == classroom){
-          		tues++;
-        	}
-        	if("WEDNESDAY" == student.daysEnrolled[i].day && student.group == classroom){
-          		wed++;
-    		}
-        	if("THURSDAY" == student.daysEnrolled[i].day && student.group == classroom){
-          		thur++;
-        	}
-        	if("FRIDAY" == student.daysEnrolled[i].day && student.group == classroom){
-          		fri++;
-        	}
-      	}
-    	});
       
-    }
     console.log(studentGroup);
     //pull all waitlist students waiting for current room
 
@@ -700,13 +705,13 @@ console.log("line 126");
                   if(classroom == "TODDLER"){
                     console.log("651 TODDLER");
                     console.log(dateCheck);
-                    if(forecastArray.length==0){
+                    if(forecastArray.length==1){
                     	forecastModel.movements = "As of " + formatDate(student.moveDate) + " with " + student.firstName + " " + student.lastName;
                     }else{
                     	forecastModel.movements = "As of " + formatDate(dateCheck) + " with " + student.firstName + " " + student.lastName;
                     }
                   }else{
-                  	if(forecastArray.length==0){
+                  	if(forecastArray.length==1){
                   		if(student.startDate < Session.get("forecastStartDate")){
                   			forecastModel.movements = "As of " + formatDate(Session.get("forecastStartDate")) + " with " + student.firstName + " " + student.lastName;
                   		}else{
