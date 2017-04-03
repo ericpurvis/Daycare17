@@ -169,6 +169,26 @@ console.log("line 126");
       console.log("line 176");
       console.log(student.moveDate);
       console.log("line 178");
+      
+      WaitlistArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAdds, student.group , student.order );
+        if(WaitlistArray != null && WaitlistArray.length > 0){
+          console.log("waitlistAdds");
+          console.log(waitlistAdds);
+          console.log("waitlistArray");
+          console.log(WaitlistArray);
+          for(var i = 0; i < WaitlistArray.length; i++){
+            forecastArray.push(WaitlistArray[i]);
+          }
+          if(WaitlistArray.length > 0){
+            mon = WaitlistArray[WaitlistArray.length - 1].monCount;
+            tues = WaitlistArray[WaitlistArray.length - 1].tueCount;
+            wed = WaitlistArray[WaitlistArray.length - 1].wedCount;
+            thur = WaitlistArray[WaitlistArray.length - 1].thuCount;
+            fri = WaitlistArray[WaitlistArray.length - 1].friCount;
+          }
+        }
+        arrayCount = forecastArray.length;
+        
       if(student.moveDate > startDate && student.moveDate < endDate && classroom == "INFANT"){
 
         forecastModel.movements = "As of " + formatDate(student.moveDate) + " without " + student.firstName + " " + student.lastName;
@@ -495,14 +515,18 @@ console.log("line 126");
     console.log("forecastArray.length line 373 " + (forecastArray.length - 1));
     console.log("forecastArray line 374 " + forecastArray);
     console.log("forecastArray[forecastArray.length - 1] line 374 " + forecastArray[forecastArray.length - 1]);
-    var lastEntry = forecastArray[forecastArray.length - 1];
-  
+    if(forecastArray.length === 0){
+        var lastEntry = forecastArray[0];
+    }
+    else{
+        var lastEntry = forecastArray[forecastArray.length - 1];
+    }
     console.log("lastEntry.monCount line 374 " + lastEntry.monCount);
     var mon = lastEntry.monCount;
-      var tues = lastEntry.tueCount;
-      var wed = lastEntry.wedCount;
-      var thur = lastEntry.thuCount;
-      var fri = lastEntry.friCount;
+    var tues = lastEntry.tueCount;
+    var wed = lastEntry.wedCount;
+    var thur = lastEntry.thuCount;
+    var fri = lastEntry.friCount;
   
   
     console.log("hello 386");
