@@ -707,7 +707,11 @@ console.log("line 126");
                     }
                   }else{
                   	if(forecastArray.length==0){
-                  		forecastModel.movements = "As of " + formatDate(student.startDate) + " with " + student.firstName + " " + student.lastName;
+                  		if(student.startDate < Session.get("forecastStartDate")){
+                  			forecastModel.movements = "As of " + formatDate(Session.get("forecastStartDate")) + " with " + student.firstName + " " + student.lastName;
+                  		}else{
+                  			forecastModel.movements = "As of " + formatDate(student.startDate) + " with " + student.firstName + " " + student.lastName;
+                  		}
                   	}else{
                     	forecastModel.movements = "As of " + formatDate(dateAval) + " with " + student.firstName + " " + student.lastName;
                     }
