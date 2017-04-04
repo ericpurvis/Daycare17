@@ -26,6 +26,7 @@ Assen Marinov (marinov.7@osu.edu)
 	<li><a href="https://atmospherejs.com/reywood/publish-composite">reywood:publish-composite</a></li>
 	<li><a href="https://atmospherejs.com/meteor/check">check</a></li>
 	<li><a href="https://atmospherejs.com/meteor/http">http</a></li>
+	<li>tableExport</li>
 </ul>
 <p>There are more packages that are added to the project, you can see a list of them in the .meteor/packages file</p>
 
@@ -36,3 +37,9 @@ Assen Marinov (marinov.7@osu.edu)
 username: olb
 email: admin@olb.com
 password: *********
+
+# Deployment Instructions 
+Deployment Instuctions can be found in the 'OLBTechnicalDocumentation' document under 'Deployment Instructions'  
+
+# Browser Requirements 
+Once the application is deployed, use a new version of either Firefox or Internet Explorer to view / use the application. 
