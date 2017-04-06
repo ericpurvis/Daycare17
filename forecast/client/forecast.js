@@ -103,8 +103,6 @@ Template.forecast.events({
    */
   function createForecastModel(startDate, timeFrameString)
   {
-     daysRecieved = new Map();
-
     var forecastArray =[];
     var endDate = new Date(startDate);
     var timeFrame = parseInt(timeFrameString);
@@ -197,7 +195,7 @@ Template.forecast.events({
       
     //init check of waitlist students
     if(forecastArray.length == 1){
-	var initWaitlistArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAdds, classroom, "1", daysRecieved );
+	var initWaitlistArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAdds, classroom, "1" );
 	if(initWaitlistArray.length > 0){
 		for(var i = 0; i < initWaitlistArray.length; i++){
 			forecastArray.push(initWaitlistArray[i]);
@@ -253,7 +251,7 @@ Template.forecast.events({
         arrayCount++;
         var WaitlistArray = [];
         //SEE IF A STUDENT CAN BE ADDED FROM WAITLIST
-        WaitlistArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAdds, student.group, student.order,daysRecieved );
+        WaitlistArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAdds, student.group, student.order );
         if(WaitlistArray != null && WaitlistArray.length > 0){
           console.log("waitlistAdds");
           console.log(waitlistAdds);
@@ -281,7 +279,7 @@ Template.forecast.events({
           if (student.group=="INFANT"){
               var WaitlistArray = [];
               //SEE IF A STUDENT CAN BE ADDED FROM WAITLIST
-              WaitlistArray = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAdds, student.group , student.order,daysRecieved );
+              WaitlistArray = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAdds, student.group , student.order );
               if(WaitlistArray != null && WaitlistArray.length > 0){
                 for(var i = 0; i <= WaitlistArray.length-1; i++){
                   forecastArray.push(WaitlistArray[i]);
@@ -372,7 +370,7 @@ Template.forecast.events({
           else{
              var WaitlistArray = [];
               //SEE IF A STUDENT CAN BE ADDED FROM WAITLIST
-              WaitlistArray = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAdds, student.group, student.order, daysRecieved);
+              WaitlistArray = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAdds, student.group, student.order);
               if(WaitlistArray != null && WaitlistArray.length > 0){
                 for(var i = 0; i <= WaitlistArray.length-1; i++){
                   forecastArray.push(WaitlistArray[i]);
@@ -438,7 +436,7 @@ Template.forecast.events({
      if(classroom == "INFANT"){
       var waitlistOutArray = [];
       if(waitlistAdds != null && waitlistAdds.length>0){
-          waitlistOutArray = GetWaitlistMoveOut(waitlistAdds,startDate,endDate,daysRecieved);
+        waitlistOutArray = GetWaitlistMoveOut(waitlistAdds,startDate,endDate);
 
         var foreArrayTemp = forecastArray.slice();
         if(waitlistOutArray != null && waitlistOutArray.length > 0){
@@ -501,7 +499,7 @@ Template.forecast.events({
      }else if(classroom == "TODDLER"){
         var WaitlistArray = [];
         //SEE IF A STUDENT CAN BE ADDED FROM WAITLIST
-         WaitlistArray = checkWaitlist(classroom, endDate ,forecastArray, waitlistAdds, "INFANT" , "1",daysRecieved );
+        WaitlistArray = checkWaitlist(classroom, endDate ,forecastArray, waitlistAdds, "INFANT" , "1" );
         if(WaitlistArray != null && WaitlistArray.length > 0){
           for(var i = 0; i <= WaitlistArray.length-1; i++){
             forecastArray.push(WaitlistArray[i]);
@@ -558,7 +556,7 @@ Template.forecast.events({
    *This method checks the waitlist of the currently selected classroom and finds the first student that would be available to take the spot
    * CALL THIS METHOD EVERYTIME A STUDENT TRANSITIONS OUT OF A CLASSROOM
     **/
-function checkWaitlist(classroom, dateAval,forecastArray,waitlistAdds, studentGroup, studentOrder,daysRecievedMap)//pass array with students on waitlist already added during current createModel instance
+  function checkWaitlist(classroom, dateAval,forecastArray,waitlistAdds, studentGroup, studentOrder)//pass array with students on waitlist already added during current createModel instance
   {
     var WaitlistArray =[];
     var mon = 0;
@@ -593,8 +591,7 @@ function checkWaitlist(classroom, dateAval,forecastArray,waitlistAdds, studentGr
     }
     
     console.log(waitlistStudents);
-      waitlistStudents.forEach(function(student){
-	  daysActuallyAdded =" "
+    waitlistStudents.forEach(function(student){
       var dateCheck;
       if(classroom == "INFANT"){
         dateCheck = student.startDate;
@@ -644,106 +641,63 @@ function checkWaitlist(classroom, dateAval,forecastArray,waitlistAdds, studentGr
               if("MONDAY" == student.daysWaitlisted[i].day){
                 if(mon<maxAllowed){
                   atLeastTwoDays++;
-               
+                  mon++;
+                  forecastModel.monCount = mon;
                   if(atLeastTwoDays >=2){
                   	canBeAdded = true;
                   }
-		            daysActuallyAdded+="M";
                 }
               }
               else if("TUESDAY" == student.daysWaitlisted[i].day){
                 if(tues<maxAllowed){
                   atLeastTwoDays++;
-                  
+                  tues++;
+                  forecastModel.tueCount = tues;
                   if(atLeastTwoDays >=2){
                   	canBeAdded = true;
                   }
-		              daysActuallyAdded+="T";
                 }
               }
               else if("WEDNESDAY" == student.daysWaitlisted[i].day){
                 if(wed<maxAllowed){
                   atLeastTwoDays++;
-                  
+                  wed++;
+                  forecastModel.wedCount = wed;
                   if(atLeastTwoDays >=2){
                   	canBeAdded = true;
                   }
-		               daysActuallyAdded+="W";
                 }
               }
               else if("THURSDAY" == student.daysWaitlisted[i].day){
                 if(thur<maxAllowed){
                   atLeastTwoDays++;
-                 
+                  thur++;
+                  forecastModel.thuCount = thur;
                   if(atLeastTwoDays >=2){
                   	canBeAdded = true;
                   }
-		             daysActuallyAdded+="th";
                 }
               }
               else if("FRIDAY" == student.daysWaitlisted[i].day){
                 if(fri<maxAllowed){
                   atLeastTwoDays++;
-                  
+                  fri++;
+                  forecastModel.friCount = fri;
                   if(atLeastTwoDays >=2){
                   	canBeAdded = true;
                   }
-		             daysActuallyAdded+="F";
                 }
               }
-	    }
-
-
-
-      if(waitlistAdds != null && waitlistAdds.length > 0  && waitlistAdds.indexOf(student._id)>=0){
-                canBeAdded = false;
-            }
-
-      if(atLeastTwoDays>=2 && canBeAdded){
-           
               console.log(i);
-              console.log(maxAllowed);
-              console.log(mon);
-              if(daysActuallyAdded.indexOf("M")>=0){               
-                  mon++;
-                  forecastModel.monCount = mon;                
-		   
-                }
-              
-              if(daysActuallyAdded.indexOf("T")>=0){
-                
-                  tues++;
-                  forecastModel.tueCount = tues;
-                 
-                }
-              
-              if(daysActuallyAdded.indexOf("W")>=0){
-               
-                  wed++;
-                  forecastModel.wedCount = wed;
-                  
-              }
-             if(daysActuallyAdded.indexOf("th")>=0){
-                
-                  thur++;
-                  forecastModel.thuCount = thur;
-                  
-              }
-             if(daysActuallyAdded.indexOf("F")>=0){
-                
-                  fri++;
-                  forecastModel.friCount = fri;                                
-	          }
-              daysRecievedMap.set(student._id,daysActuallyAdded);
-		}
-      }
-	      console.log(i);
-	
+            }
+          }
             console.log("canBeAdded");
             console.log(canBeAdded);
             console.log(student._id);
             console.log(waitlistAdds);
-            
+            if(waitlistAdds != null && waitlistAdds.length > 0  && waitlistAdds.indexOf(student._id)>=0){
+                canBeAdded = false;
+            }
               console.log(canBeAdded);
             if(canBeAdded == true){
                   console.log("before movements");
@@ -812,7 +766,7 @@ function checkWaitlist(classroom, dateAval,forecastArray,waitlistAdds, studentGr
    return WaitlistArray;
 }
 
-function GetWaitlistMoveOut(waitlistAdds, startDate, endDate,daysrecieved)
+function GetWaitlistMoveOut(waitlistAdds, startDate, endDate)
 {
   console.log("waitlistAdds");
   console.log(waitlistAdds);
@@ -859,89 +813,29 @@ function GetWaitlistMoveOut(waitlistAdds, startDate, endDate,daysrecieved)
               forecastModel.status = student.status;
               for(var i=0;i<student.daysWaitlisted.length;i++){
                   if("MONDAY" == student.daysWaitlisted[i].day){
-                    if(daysrecieved.has(student._id)){
-                      console.log("Entered Monday inner if statment");
-                      console.log(daysrecieved.get(student._id));
-                      if(((daysrecieved.get(student._id)).indexOf("M"))>=0){
-                        console.log("mon using map");
-                        mon--;                
-                        forecastModel.monCount = mon;
-                      }
-                    }
-                  ///  else{
-                  //      console.log(mon);
-                  //      mon--;                
-                  //      forecastModel.monCount = mon;
-                    
-                 // }
+                    console.log(mon);
+                    mon--;
+                    forecastModel.monCount = mon;
                   }
                   if("TUESDAY" == student.daysWaitlisted[i].day){
-                    if(daysrecieved.has(student._id)){
-                      console.log("Entered Tuesday inner if statment");
-                      console.log(daysrecieved.get(student._id));
-                      if(((daysrecieved.get(student._id)).indexOf("T"))>=0){
-                        console.log("tues using map");
-                        tues--;
-                        forecastModel.tueCount = tues;
-                      }
-                    }
-                    //  else{
-                      //  console.log(tues);
-                        //tues--;
-                        //forecastModel.tueCount = tues;
-                      
-                    //}
+                    console.log(tues);
+                    tues--;
+                    forecastModel.tueCount = tues;
                   }
                   if("WEDNESDAY" == student.daysWaitlisted[i].day){
-                      console.log("Entered Wednesday statment");
-                    if(daysrecieved.has(student._id)){
-                      console.log("Entered Wednesday inner if statment");
-                      console.log(daysrecieved.get(student._id));
-                      if(((daysrecieved.get(student._id)).indexOf("W"))>=0){
-                        console.log("wed using map");
-                        wed--;
-                        forecastModel.wedCount = wed;
-                      }
-                    }
-                    //else{
-                        //console.log(wed);
-                        //wed--;
-                      //  forecastModel.wedCount = wed;
-                    //}
+                    console.log(wed);
+                    wed--;
+                    forecastModel.wedCount = wed;
                   }
                   if("THURSDAY" == student.daysWaitlisted[i].day){
-                     console.log("Entered Thursday statment");
-                    if(daysrecieved.has(student._id)){
-                      console.log("Entered Thursday inner if statment");
-                      console.log(daysrecieved.get(student._id));
-                      if(((daysrecieved.get(student._id)).indexOf("th"))>=0){
-                        console.log("thur using map");
-                        thur--;
-                        forecastModel.thuCount = thur;
-                       }
-                    }
-                    //else{
-                     ///  console.log(thur);
-                    //thur--;
-                    //forecastModel.thuCount = thur;
-                   // }
+                    console.log(thur);
+                    thur--;
+                    forecastModel.thuCount = thur;
                   }
                   if("FRIDAY" == student.daysWaitlisted[i].day){
-                    console.log("Entered Friday statment");
-                    if(daysrecieved.has(student._id)){
-                      console.log("Entered Friday inner if statment");
-                      console.log(daysrecieved.get(student._id));
-                      if(((daysrecieved.get(student._id)).indexOf("F"))>=0){
-                        console.log("fri using map");
-                        fri--;
-                        forecastModel.friCount = fri;
-                      }
-                    }
-                    ///else{
-                      //console.log(fri);
-                      //fri--;
-                     // forecastModel.friCount = fri;
-                   // }
+                    console.log(fri);
+                    fri--;
+                    forecastModel.friCount = fri;
                   }
                 }
                 forecastModel.monCount = mon;
