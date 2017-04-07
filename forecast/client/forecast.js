@@ -195,17 +195,17 @@ Template.forecast.events({
       
     //init check of waitlist students
     if(forecastArray.length == 1){
-	var initWaitlistArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAdds, classroom, "1" );
-	if(initWaitlistArray.length > 0){
-		for(var i = 0; i < initWaitlistArray.length; i++){
-			forecastArray.push(initWaitlistArray[i]);
-		}
+      var initWaitlistArray = checkWaitlist(classroom, startDate, forecastArray, waitlistAdds, classroom, "1" );
+      if(initWaitlistArray.length > 0){
+        for(var i = 0; i < initWaitlistArray.length; i++){
+          forecastArray.push(initWaitlistArray[i]);
+        }
         mon = initWaitlistArray[initWaitlistArray.length - 1].monCount;
         tues = initWaitlistArray[initWaitlistArray.length - 1].tueCount;
         wed = initWaitlistArray[initWaitlistArray.length - 1].wedCount;
         thur = initWaitlistArray[initWaitlistArray.length - 1].thuCount;
         fri = initWaitlistArray[initWaitlistArray.length - 1].friCount;
-    }
+        }
     }
       
     if(student.moveDate > startDate && student.moveDate < endDate && classroom == "INFANT"){
@@ -572,14 +572,14 @@ Template.forecast.events({
     }
   
     //get last entry for up-to-date availability
-
-    var lastEntry = forecastArray[forecastArray.length - 1];
-    mon = lastEntry.monCount;
-    tues = lastEntry.tueCount;
-    wed = lastEntry.wedCount;
-    thur = lastEntry.thuCount;
-    fri = lastEntry.friCount;
-  
+    if(forecastArray.length > 0){
+      var lastEntry = forecastArray[forecastArray.length - 1];
+      mon = lastEntry.monCount;
+      tues = lastEntry.tueCount;
+      wed = lastEntry.wedCount;
+      thur = lastEntry.thuCount;
+      fri = lastEntry.friCount;
+    }
       
     console.log(studentGroup);
     //pull all waitlist students waiting for current room
