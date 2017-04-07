@@ -741,9 +741,21 @@ Template.forecast.events({
                     }
                   }  
                   if(classroom == "TODDLER"){
-                    forecastModel.movementDate = dateCheck;
+                    if(forecastArray.length==1){
+                    	forecastModel.movementDate = student.moveDate;
+                    }else{
+                      forecastModel.movementDate = dateCheck;
+                    }
                   }else{
-                    forecastModel.movementDate = dateAval;
+                    	if(forecastArray.length==1){
+                        if(student.startDate < Session.get("forecastStartDate")){
+                          forecastModel.movementDate = Session.get("forecastStartDate");
+                        }else{
+                          forecastModel.movementDate = student.startDate;
+                        }
+                  	  }else{
+                        forecastModel.movementDate = dateAval;
+                      }
                   }
                   console.log(forecastModel.movements);
                   forecastModel.monCount = mon;
