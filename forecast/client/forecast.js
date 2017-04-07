@@ -806,7 +806,25 @@ function GetWaitlistMoveOut(waitlistAdds, startDate, endDate)
                 };
               forecastModel.movements = "As of " + formatDate(student.moveDate) + " without " + student.firstName + " " + student.lastName;
               console.log(forecastModel.movements);
-              forecastModel.daysReq = " ";
+              forecastModel.daysReq ="Days Waitlisted: ";
+                  
+                  for(var x=0;x<student.daysWaitlisted.length;x++){
+                	if("MONDAY" == student.daysWaitlisted[x].day){
+            		  forecastModel.daysReq += " M ";
+          	        }
+          	   		if("TUESDAY" == student.daysWaitlisted[x].day){
+                      forecastModel.daysReq += " T ";
+                    }
+                    if("WEDNESDAY" == student.daysWaitlisted[x].day){
+                      forecastModel.daysReq += " W ";
+                    }
+                    if("THURSDAY" == student.daysWaitlisted[x].day){
+                      forecastModel.daysReq += " TH ";
+                    }
+                    if("FRIDAY" == student.daysWaitlisted[x].day){
+                      forecastModel.daysReq += " F ";
+                    }
+                  }  
               forecastModel.movementDate = student.moveDate;
               forecastModel.details = student.details;
               forecastModel.type = student.type;
