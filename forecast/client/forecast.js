@@ -699,6 +699,7 @@ Template.forecast.events({
                 canBeAdded = false;
             }
               console.log(canBeAdded);
+              var forecastStartDate = new Date(Session.get("forecastStartDate"));
             if(canBeAdded == true){
                   console.log("before movements");
                   console.log(classroom);
@@ -712,8 +713,8 @@ Template.forecast.events({
                     }
                   }else{
                   	if(forecastArray.length==1){
-                  		if(student.startDate < Session.get("forecastStartDate")){
-                  			forecastModel.movements = "As of " + formatDate(Session.get("forecastStartDate")) + " with " + student.firstName + " " + student.lastName;
+                  		if(student.startDate < forecastStartDate){
+                  			forecastModel.movements = "As of " + formatDate(forecastStartDate) + " with " + student.firstName + " " + student.lastName;
                   		}else{
                   			forecastModel.movements = "As of " + formatDate(student.startDate) + " with " + student.firstName + " " + student.lastName;
                   		}
@@ -748,8 +749,8 @@ Template.forecast.events({
                     }
                   }else{
                     	if(forecastArray.length==1){
-                        if(student.startDate < Session.get("forecastStartDate")){
-                          forecastModel.movementDate = Session.get("forecastStartDate");
+                        if(student.startDate < forecastStartDate){
+                          forecastModel.movementDate = forecastStartDate;
                         }else{
                           forecastModel.movementDate = student.startDate;
                         }
