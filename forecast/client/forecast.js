@@ -418,8 +418,6 @@ Template.forecast.events({
             }
 
             //add model
-            console.log("arrayCount line 302" + arrayCount);
-            console.log("forecastArray line 303" + forecastArray);
             forecastArray.push(forecastModel);
             arrayCount++;
 
@@ -805,7 +803,6 @@ Template.forecast.events({
                   waitlistAdds.push(student._id);
                   WaitlistArray.push(forecastModel);
               
-            //add some unique attribute of student into array of successfully transitioned students.
             }
         
         }
@@ -822,7 +819,7 @@ function GetWaitlistMoveOut(waitlistAdds, startDate, endDate)
 
   var waitlistOutArray = [];
   for(var count = 0; count < waitlistAdds.length; count++){
-    //var student = Students.find({$or: [{status:"WAITLIST"}, {status:"PARTIALLY_ENROLLED"}], group: "INFANT"});  
+ 
     var student = Students.findOne({_id: waitlistAdds[count]});
           var mon = 0;
           var tues = 0;
@@ -908,9 +905,9 @@ function GetWaitlistMoveOut(waitlistAdds, startDate, endDate)
                   forecastModel.wedCount = wed;
                   forecastModel.thuCount = thur;
                   forecastModel.friCount = fri;
-                console.log("before push");
+
                 waitlistOutArray.push(forecastModel);
-                console.log("waitlistOutArray line 629");
+
                 console.log(waitlistOutArray);
             }
 
