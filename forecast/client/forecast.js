@@ -195,7 +195,7 @@ Template.forecast.events({
       
     //init check of waitlist students
     if(forecastArray.length == 1){
-      var initWaitlistArray = checkWaitlist(classroom, startDate, forecastArray, waitlistAdds, classroom, "1" );
+      var initWaitlistArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAdds, classroom, "1" );
       if(initWaitlistArray.length > 0){
         for(var i = 0; i < initWaitlistArray.length; i++){
           forecastArray.push(initWaitlistArray[i]);
@@ -245,8 +245,7 @@ Template.forecast.events({
           }
         }
 
-        console.log("arrayCount line 202" + arrayCount);
-        console.log("forecastArray line 203" + forecastArray);
+
         forecastArray.push(forecastModel);
         arrayCount++;
         var WaitlistArray = [];
@@ -274,7 +273,7 @@ Template.forecast.events({
 
         //Pull all students (infant and toddler) that are enrolled and fit this range
       }else if(student.moveDate > startDate && student.moveDate < endDate && classroom == "TODDLER"){
-          console.log("line 243");
+
           //If student is an infant then print "with"
           if (student.group=="INFANT"){
               var WaitlistArray = [];
@@ -581,7 +580,7 @@ Template.forecast.events({
       fri = lastEntry.friCount;
     }
       
-    console.log(studentGroup);
+
     //pull all waitlist students waiting for current room
 
     if(classroom == "INFANT"){
@@ -704,12 +703,12 @@ Template.forecast.events({
                   console.log("before movements");
                   console.log(classroom);
                   if(classroom == "TODDLER"){
-                    console.log("651 TODDLER");
+
                     console.log(dateCheck);
                     if(forecastArray.length==1){
                     	forecastModel.movements = "As of " + formatDate(student.moveDate) + " with " + student.firstName + " " + student.lastName;
                     }else{
-                    	forecastModel.movements = "As of " + formatDate(dateCheck) + " with " + student.firstName + " " + student.lastName;
+                    	forecastModel.movements = "As of " + formatDate(dateAval) + " with " + student.firstName + " " + student.lastName;
                     }
                   }else{
                   	if(forecastArray.length==1){
@@ -787,9 +786,12 @@ function GetWaitlistMoveOut(waitlistAdds, startDate, endDate)
 
   var waitlistOutArray = [];
   for(var count = 0; count < waitlistAdds.length; count++){
-    var student = Students.find({$or: [{status:"WAITLIST"}, {status:"PARTIALLY_ENROLLED"}], group: "INFANT"});  
-    student.forEach(function(student){
-        if(student.startDate != null && student.moveDate != null){
+    //var student = Students.find({$or: [{status:"WAITLIST"}, {status:"PARTIALLY_ENROLLED"}], group: "INFANT"});  
+    var student = Students.findOne({_id: waitlistAdds[count]});
+    console.log("STUDENT");
+    console.log(student);
+    //student.forEach(function(student){
+        //if(student.startDate != null && student.moveDate != null){
           var mon = 0;
           var tues = 0;
           var wed = 0;
@@ -800,7 +802,7 @@ function GetWaitlistMoveOut(waitlistAdds, startDate, endDate)
           console.log(count);
           console.log(waitlistAdds);
           console.log(waitlistAdds[count]);
-          if(student._id == waitlistAdds[count]){
+          //if(student._id == waitlistAdds[count]){
             console.log("out first name");
             console.log(student.firstName);
             console.log(student.lastName);
@@ -879,11 +881,10 @@ function GetWaitlistMoveOut(waitlistAdds, startDate, endDate)
                 console.log("waitlistOutArray line 629");
                 console.log(waitlistOutArray);
             }
-          }
-        }
-    });
+         // }
+        //}
+   // });
   }
-  console.log("waitlistOutArray line 635");
   console.log(waitlistOutArray);
   return waitlistOutArray;
 }
