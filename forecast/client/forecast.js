@@ -725,7 +725,7 @@ Template.forecast.events({
                   thur++;
                   forecastModel.thuCount = thur;
                   forecastModel.movements += "TH ";
-                  waitlistAdd.daysGiven += "TH";
+                  waitlistAdd.daysGiven += "H";
                 }
               }
               else if("FRIDAY" == student.daysWaitlisted[i].day){
@@ -894,7 +894,7 @@ function GetWaitlistMoveOut(waitlistAddsArray, startDate, endDate)
                     }
                   }
                   if("THURSDAY" == student.daysWaitlisted[i].day){
-                  if(waitlistAddsArray[count].daysGiven.indexOf("TH") >=0){
+                  if(waitlistAddsArray[count].daysGiven.indexOf("H") >=0){
                     thur--;
                     forecastModel.thuCount = thur;
                     forecastModel.movements += "TH ";
