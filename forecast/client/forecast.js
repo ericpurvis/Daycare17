@@ -95,8 +95,9 @@ Template.forecast.events({
 });
 
 
-  var waitlistOutArray = [];
+  
   var waitlistAddsToddler = [];
+  var waitlistAddsArray =[];
   /**
    * Takes the students from the current infant classrooms and adds them into the forecast model ( this will require a model be created for it)
    * Look at screen shot and google docs they sent for how the table should look and what fields are needed
@@ -107,10 +108,12 @@ Template.forecast.events({
    */
   function createForecastModel(startDate, timeFrameString)
   {
+    waitlistAddsToddler = [];
+    waitlistAddsArray =[];
     var id = Session.get("selectedClassroomId");  
     var classroom = Classrooms.findOne({_id: id}).type;
     if(classroom == "TODDLER"){
-      createForecast("INFANT", startDate, timeFrameString, "INFANT")
+      createForecast("INFANT", startDate, timeFrameString, "hgXWqymWGHHspKXqJ");
     }
     return createForecast(classroom, startDate, timeFrameString, id);
 
@@ -119,11 +122,12 @@ Template.forecast.events({
   
 function createForecast(classroom, startDate, timeFrameString, id)
 {
+  var waitlistOutArray = [];
   var forecastArray =[];
     var endDate = new Date(startDate);
     var timeFrame = parseInt(timeFrameString);
     endDate.setMonth(startDate.getMonth() + timeFrame);
-    var waitlistAddsArray =[];
+    
     var mon = 0;
     var tues = 0;
     var wed = 0;
@@ -305,7 +309,10 @@ function createForecast(classroom, startDate, timeFrameString, id)
           if (student.group=="INFANT"){
               var WaitlistArray = [];
               //SEE IF A STUDENT CAN BE ADDED FROM WAITLIST
-              WaitlistArray = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAddsArray, student.group , student.order, waitlistAddsToddler);
+              var WaitlistArrayTemp = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAddsArray, student.group , student.order, waitlistAddsToddler);
+              for(var ch = 0; ch < WaitlistArrayTemp.length; ch++){
+                WaitlistArray.push(WaitlistArrayTemp[ch]);
+              }
               console.log("WaitlistArray");
               console.log(WaitlistArray);
               if(WaitlistArray != null && WaitlistArray.length > 0){
@@ -387,6 +394,7 @@ function createForecast(classroom, startDate, timeFrameString, id)
              }
             //add model
             forecastArray.push(forecastModel);   
+            console.log(forecastModel);
              console.log("forecastArray line 327");
             arrayCount = forecastArray.length;
             console.log("forecastArray line 329");
@@ -397,7 +405,10 @@ function createForecast(classroom, startDate, timeFrameString, id)
             console.log("line 378");
              var WaitlistArray = [];
               //SEE IF A STUDENT CAN BE ADDED FROM WAITLIST
-              WaitlistArray = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAddsArray, student.group, student.order, waitlistAddsToddler);
+              var WaitlistArrayTemp = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAddsArray, student.group, student.order, waitlistAddsToddler);
+              for(var ch = 0; ch < WaitlistArrayTemp.length; ch++){
+                WaitlistArray.push(WaitlistArrayTemp[ch]);
+              }
               if(WaitlistArray != null && WaitlistArray.length > 0){
                 for(var i = 0; i <= WaitlistArray.length-1; i++){
                   forecastArray.push(WaitlistArray[i]);
@@ -574,10 +585,13 @@ function createForecast(classroom, startDate, timeFrameString, id)
     console.log("arrayCount line 345" + arrayCount);
     console.log("forecastArray line 346" + forecastArray);
     forecastArray.push(forecastModel);
-
+    console.log(waitlistAddsToddler);
    for(var index = 0; index < waitlistAddsArray.length; index++){
      waitlistAddsToddler.push(waitlistAddsArray[index]);
    }
+   console.log("waitlistAddsToddler");
+   console.log(waitlistAddsToddler);
+   console.log(waitlistAddsArray);
     return forecastArray;
 }
 
