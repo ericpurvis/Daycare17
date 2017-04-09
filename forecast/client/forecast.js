@@ -456,6 +456,19 @@ function createForecast(classroom, startDate, timeFrameString, id)
        //console.log("Student not in range");
       }
       
+      //check waitlist for movers before every student leaves 
+    waitlistOutArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,student.moveDate,classroom);
+    if(waitlistOutArray.length > 0){
+        for(var i = 0; i < waitlistOutArray.length; i++){
+          forecastArray.push(waitlistOutArray[i]);
+        }
+        mon = waitlistOutArray[waitlistOutArray.length - 1].monCount;
+        tues = waitlistOutArray[waitlistOutArray.length - 1].tueCount;
+        wed = waitlistOutArray[waitlistOutArray.length - 1].wedCount;
+        thur = waitlistOutArray[waitlistOutArray.length - 1].thuCount;
+        fri = waitlistOutArray[waitlistOutArray.length - 1].friCount;
+        
+        }
     });
 
       //check waitlist one last time 
@@ -810,6 +823,7 @@ function GetWaitlistMoveOut(forecastArray, waitlistAddsArray, startDate, endDate
   
   console.log("WAILTIST ADDS ARRAY!!!!");
   console.log(waitlistAddsArray);
+  console.log(endDate);
   
   for(var count = 0; count < waitlistAddsArray.length; count++){
  
@@ -828,9 +842,12 @@ function GetWaitlistMoveOut(forecastArray, waitlistAddsArray, startDate, endDate
           thur = lastEntry.thuCount;
           fri = lastEntry.friCount;
           
-         // if(classroom == "TODDLER"){
-            //dateMove.setMonth(student.moveDate.getMonth() + 12);
-          //}
+          console.log(waitlistAddsArray[count].dateMovingOut);
+          console.log(endDate);
+          
+         if(classroom == "TODDLER"){
+            dateMove = dateMove.setMonth(student.moveDate.getMonth() + 12);
+          }
 
 
             if(waitlistAddsArray[count].dateMovingOut <= endDate){
