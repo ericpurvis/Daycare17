@@ -835,8 +835,8 @@ function GetWaitlistMoveOut(forecastArray, waitlistAddsArray, startDate, endDate
           var wed = 0;
           var thur = 0;
           var fri = 0;
-          
           var dateMove = student.moveDate;
+          var newDT = student.moveDate;
           var lastEntry = forecastArray[forecastArray.length-1];
           mon = lastEntry.monCount;
           tues = lastEntry.tueCount;
@@ -844,13 +844,11 @@ function GetWaitlistMoveOut(forecastArray, waitlistAddsArray, startDate, endDate
           thur = lastEntry.thuCount;
           fri = lastEntry.friCount;
           
-          console.log(waitlistAddsArray[count].dateMovingOut);
-          console.log(endDate);
           
          if(classroom == "TODDLER"){
-            dateMove = dateMove.setMonth(student.moveDate.getMonth() + 12);
+           dateMove.setMonth(student.moveDate.getMonth() + 12);
           }
-
+          
 
             if(waitlistAddsArray[count].dateMovingOut <= endDate && studentsTakenOut.indexOf(student._id)<0){
             
