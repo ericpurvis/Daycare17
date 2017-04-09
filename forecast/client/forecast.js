@@ -207,6 +207,20 @@ Template.forecast.events({
         fri = initWaitlistArray[initWaitlistArray.length - 1].friCount;
         }
     }
+    
+    var waitlistOutArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,student.moveDate);
+    if(waitlistOutArray.length > 0){
+        for(var i = 0; i < waitlistOutArray.length; i++){
+          forecastArray.push(waitlistOutArray[i]);
+        }
+        mon = waitlistOutArray[waitlistOutArray.length - 1].monCount;
+        tues = waitlistOutArray[waitlistOutArray.length - 1].tueCount;
+        wed = waitlistOutArray[waitlistOutArray.length - 1].wedCount;
+        thur = waitlistOutArray[waitlistOutArray.length - 1].thuCount;
+        fri = waitlistOutArray[waitlistOutArray.length - 1].friCount;
+        }
+    
+    
       
     if(student.moveDate > startDate && student.moveDate < endDate && classroom == "INFANT"){
 
@@ -424,69 +438,21 @@ Template.forecast.events({
       }
       
     });
-     if(classroom == "INFANT"){
-      var waitlistOutArray = [];
-      if(waitlistAddsArray != null && waitlistAddsArray.length>0){
-        waitlistOutArray = GetWaitlistMoveOut(waitlistAddsArray,startDate,endDate);
-
-        var foreArrayTemp = forecastArray.slice();
-        if(waitlistOutArray != null && waitlistOutArray.length > 0){
-          for(var x = 0; x < waitlistOutArray.length; x++){
-            for(var j = 0; j < foreArrayTemp.length; j++){
-              if(j != foreArrayTemp.length - 1){
-                if(foreArrayTemp[j].movementDate <= waitlistOutArray[x].movementDate && foreArrayTemp[j + 1].movementDate > waitlistOutArray[x].movementDate){
-                  waitlistOutArray[x].monCount = forecastArray[j].monCount + waitlistOutArray[x].monCount;
-                  waitlistOutArray[x].tueCount = forecastArray[j].tueCount + waitlistOutArray[x].tueCount;
-                  waitlistOutArray[x].wedCount = forecastArray[j].wedCount + waitlistOutArray[x].wedCount;
-                  waitlistOutArray[x].thuCount = forecastArray[j].thuCount + waitlistOutArray[x].thuCount;
-                  waitlistOutArray[x].friCount = forecastArray[j].friCount + waitlistOutArray[x].friCount;
-                  forecastArray.splice(j + 1,0,waitlistOutArray[x]);
-                  for(var z = j + 2; z < forecastArray.length; z++){
-                    if(forecastArray[z].monCount != forecastArray[z - 2].monCount){
-                      forecastArray[z].monCount = forecastArray[z].monCount -1;
-                    }else{
-                      forecastArray[z].monCount = forecastArray[z -1].monCount;
-                    }
-
-                    if(forecastArray[z].tueCount != forecastArray[z - 2].tueCount){
-                      forecastArray[z].tueCount = forecastArray[z].tueCount -1;
-                    }else{
-                      forecastArray[z].tueCount = forecastArray[z -1].tueCount;
-                    }
-
-                    if(forecastArray[z].wedCount != forecastArray[z - 2].wedCount){
-                      forecastArray[z].wedCount = forecastArray[z].wedCount -1;
-                    }else{
-                      forecastArray[z].wedCount = forecastArray[z -1].wedCount;
-                    }
-
-                    if(forecastArray[z].thuCount != forecastArray[z - 2].thuCount){
-                      forecastArray[z].thuCount = forecastArray[z].thuCount -1;
-                    }else{
-                      forecastArray[z].thuCount = forecastArray[z -1].thuCount;
-                    }
-
-                    if(forecastArray[z].friCount != forecastArray[z - 2].friCount){
-                      forecastArray[z].friCount = forecastArray[z].friCount -1;
-                    }else{
-                      forecastArray[z].friCount = forecastArray[z -1].friCount;
-                    }
-                  }
-                }
-              }else{
-                if(foreArrayTemp[j].movementDate <= waitlistOutArray[x].movementDate){
-                  waitlistOutArray[x].monCount = forecastArray[forecastArray.length -1].monCount + waitlistOutArray[x].monCount;
-                  waitlistOutArray[x].tueCount = forecastArray[forecastArray.length -1].tueCount + waitlistOutArray[x].tueCount;
-                  waitlistOutArray[x].wedCount = forecastArray[forecastArray.length -1].wedCount + waitlistOutArray[x].wedCount;
-                  waitlistOutArray[x].thuCount = forecastArray[forecastArray.length -1].thuCount + waitlistOutArray[x].thuCount;
-                  waitlistOutArray[x].friCount = forecastArray[forecastArray.length -1].friCount + waitlistOutArray[x].friCount;
-                  forecastArray.push(waitlistOutArray[x]);
-                }
-              }
-            }   
-          }
+    
+    //check waitlist one last time 
+    var waitlistOutArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,endDate);
+    if(waitlistOutArray.length > 0){
+        for(var i = 0; i < waitlistOutArray.length; i++){
+          forecastArray.push(waitlistOutArray[i]);
         }
-      }
+        mon = waitlistOutArray[waitlistOutArray.length - 1].monCount;
+        tues = waitlistOutArray[waitlistOutArray.length - 1].tueCount;
+        wed = waitlistOutArray[waitlistOutArray.length - 1].wedCount;
+        thur = waitlistOutArray[waitlistOutArray.length - 1].thuCount;
+        fri = waitlistOutArray[waitlistOutArray.length - 1].friCount;
+        
+        }
+     if(classroom == "INFANT"){
      }else if(classroom == "TODDLER"){
         var WaitlistArray = [];
         //SEE IF A STUDENT CAN BE ADDED FROM WAITLIST
@@ -563,14 +529,14 @@ Template.forecast.events({
     }
   
     //get last entry for up-to-date availability
-    if(forecastArray.length > 0){
+
       var lastEntry = forecastArray[forecastArray.length - 1];
       mon = lastEntry.monCount;
       tues = lastEntry.tueCount;
       wed = lastEntry.wedCount;
       thur = lastEntry.thuCount;
       fri = lastEntry.friCount;
-    }
+    
       
 
     //pull all waitlist students waiting for current room
@@ -582,7 +548,6 @@ Template.forecast.events({
        var waitlistStudents = Students.find({$or: [{status:"WAITLIST"}, {status:"PARTIALLY_ENROLLED"}], group: "INFANT"}, {sort:{order:1}});
     }
     
-    console.log(waitlistStudents);
     waitlistStudents.forEach(function(student){
 
       var dateCheck;
@@ -624,12 +589,10 @@ Template.forecast.events({
           
               
           var waitlistAdd = {
+          dateMovingOut: Date,
           daysGiven: String,
           id: String
           }
-              console.log("student.daysWaitlisted");
-            console.log(student.daysWaitlisted);
-            console.log(student.daysWaitlisted.length);
             
           var allIds = [];
           
@@ -806,6 +769,7 @@ Template.forecast.events({
                   forecastModel.type = student.type;
                   forecastModel.status = student.status;
                   waitlistAdd.id = student._id;
+                  waitlistAdd.dateMovingOut = student.moveDate;
                   waitlistAddsArray.push(waitlistAdd);
                   WaitlistArray.push(forecastModel);
               
@@ -817,11 +781,14 @@ Template.forecast.events({
    return WaitlistArray;
 }
 
-function GetWaitlistMoveOut(waitlistAddsArray, startDate, endDate)
+function GetWaitlistMoveOut(forecastArray, waitlistAddsArray, startDate, endDate)
 {
 
 
   var waitlistOutArray = [];
+  
+  waitlistAddsArray.sort(waitlistOutArray);
+  
   for(var count = 0; count < waitlistAddsArray.length; count++){
  
     var student = Students.findOne({_id: waitlistAddsArray[count].id});
@@ -830,11 +797,20 @@ function GetWaitlistMoveOut(waitlistAddsArray, startDate, endDate)
           var wed = 0;
           var thur = 0;
           var fri = 0;
-          console.log("out id");
+          
+          var lastEntry = forecastArray[forecastArray.length-1];
+          mon = lastEntry.monCount;
+          tues = lastEntry.tueCount;
+          wed = lastEntry.wedCount;
+          thur = lastEntry.thuCount;
+          fri = lastEntry.friCount;
+
+          
+            console.log("out id");
             console.log("out first name");
             console.log(student.firstName);
             console.log(student.lastName);
-            if(student.moveDate < endDate){
+            if(student.moveDate <= endDate){
                 var forecastModel = {
               movements: String,
               daysReq: String,
@@ -932,7 +908,14 @@ function formatDate(date){
 }
 
 
- 
+ function sortByMoveOut(a, b) {
+    if (a.dateMovingOut === b.dateMovingOut) {
+        return 0;
+    }
+    else {
+        return (a.dateMovingOut < b.dateMovingOut) ? -1 : 1;
+    }
+}
   
 
 
