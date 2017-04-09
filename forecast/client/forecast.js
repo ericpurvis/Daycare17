@@ -223,17 +223,17 @@ function createForecast(classroom, startDate, timeFrameString, id)
         }
     }
     
-    var waitlistOutArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,student.moveDate);
-    if(waitlistOutArray.length > 0){
-        for(var i = 0; i < waitlistOutArray.length; i++){
-          forecastArray.push(waitlistOutArray[i]);
-        }
-        mon = waitlistOutArray[waitlistOutArray.length - 1].monCount;
-        tues = waitlistOutArray[waitlistOutArray.length - 1].tueCount;
-        wed = waitlistOutArray[waitlistOutArray.length - 1].wedCount;
-        thur = waitlistOutArray[waitlistOutArray.length - 1].thuCount;
-        fri = waitlistOutArray[waitlistOutArray.length - 1].friCount;
-        }
+    // var waitlistOutArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,student.moveDate);
+    // if(waitlistOutArray.length > 0){
+    //     for(var i = 0; i < waitlistOutArray.length; i++){
+    //       forecastArray.push(waitlistOutArray[i]);
+    //     }
+    //     mon = waitlistOutArray[waitlistOutArray.length - 1].monCount;
+    //     tues = waitlistOutArray[waitlistOutArray.length - 1].tueCount;
+    //     wed = waitlistOutArray[waitlistOutArray.length - 1].wedCount;
+    //     thur = waitlistOutArray[waitlistOutArray.length - 1].thuCount;
+    //     fri = waitlistOutArray[waitlistOutArray.length - 1].friCount;
+    //     }
     
     
       
@@ -885,7 +885,7 @@ function GetWaitlistMoveOut(waitlistAddsArray, startDate, endDate, classroom)
           var wed = 0;
           var thur = 0;
           var fri = 0;
-           console.log("line 875");
+          console.log("line 875");
           var date = student.moveDate;
           console.log("line 877");
           if(classroom == "TODDLER"){
