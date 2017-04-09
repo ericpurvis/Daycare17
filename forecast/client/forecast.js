@@ -92,7 +92,11 @@ Template.forecast.events({
     Session.set("forecastStartDate", new Date(tpl.$("#sdate").val()));
     }
   }
-  });
+});
+
+
+  var waitlistOutArray = [];
+  var waitlistAddsToddler = [];
   /**
    * Takes the students from the current infant classrooms and adds them into the forecast model ( this will require a model be created for it)
    * Look at screen shot and google docs they sent for how the table should look and what fields are needed
@@ -103,7 +107,19 @@ Template.forecast.events({
    */
   function createForecastModel(startDate, timeFrameString)
   {
-    var forecastArray =[];
+    var id = Session.get("selectedClassroomId");  
+    var classroom = Classrooms.findOne({_id: id}).type;
+    if(classroom == "TODDLER"){
+      createForecast("INFANT", startDate, timeFrameString, "INFANT")
+    }
+    return createForecast(classroom, startDate, timeFrameString, id);
+
+    
+  }
+  
+function createForecast(classroom, startDate, timeFrameString, id)
+{
+  var forecastArray =[];
     var endDate = new Date(startDate);
     var timeFrame = parseInt(timeFrameString);
     endDate.setMonth(startDate.getMonth() + timeFrame);
@@ -113,14 +129,13 @@ Template.forecast.events({
     var wed = 0;
     var thur = 0;
     var fri = 0;
-    var id = Session.get("selectedClassroomId");  
-    var classroom = Classrooms.findOne({_id: id}).type;
+  
     //pull students to look through;
     if(classroom =="INFANT"){
-    var studentCursor = Students.find({classId: id},{sort: {moveDate: 1}});
+      var studentCursor = Students.find({classId: id},{sort: {moveDate: 1}});
     console.log("line 130");
     }else{
-    var studentCursor = Students.find({status:"ENROLLED"},{sort: {moveDate: 1}});
+      var studentCursor = Students.find({status:"ENROLLED"},{sort: {moveDate: 1}});
     console.log("line 133");
     }
     
@@ -195,7 +210,7 @@ Template.forecast.events({
       
     //init check of waitlist students
     if(forecastArray.length == 1){
-      var initWaitlistArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAddsArray, classroom, "1" );
+      var initWaitlistArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAddsArray, classroom, "1", null );
       if(initWaitlistArray.length > 0){
         for(var i = 0; i < initWaitlistArray.length; i++){
           forecastArray.push(initWaitlistArray[i]);
@@ -250,7 +265,7 @@ Template.forecast.events({
         arrayCount++;
         var WaitlistArray = [];
         //SEE IF A STUDENT CAN BE ADDED FROM WAITLIST
-        WaitlistArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAddsArray, student.group, student.order );
+        WaitlistArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAddsArray, student.group, student.order, null );
         if(WaitlistArray != null && WaitlistArray.length > 0){
           for(var i = 0; i < WaitlistArray.length; i++){
             forecastArray.push(WaitlistArray[i]);
@@ -269,12 +284,16 @@ Template.forecast.events({
 
         //Pull all students (infant and toddler) that are enrolled and fit this range
       }else if(student.moveDate > startDate && student.moveDate < endDate && classroom == "TODDLER"){
-
+        console.log("waitlistAddsToddler");
+        console.log(waitlistAddsToddler);
+        console.log("line 286");
           //If student is an infant then print "with"
           if (student.group=="INFANT"){
               var WaitlistArray = [];
               //SEE IF A STUDENT CAN BE ADDED FROM WAITLIST
-              WaitlistArray = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAddsArray, student.group , student.order );
+              WaitlistArray = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAddsArray, student.group , student.order, waitlistAddsToddler);
+              console.log("WaitlistArray");
+              console.log(WaitlistArray);
               if(WaitlistArray != null && WaitlistArray.length > 0){
                 for(var i = 0; i <= WaitlistArray.length-1; i++){
                   forecastArray.push(WaitlistArray[i]);
@@ -361,9 +380,10 @@ Template.forecast.events({
           
           //If student is a toddler then print "without" and act decrement each day accordingly
           else{
+            console.log("line 378");
              var WaitlistArray = [];
               //SEE IF A STUDENT CAN BE ADDED FROM WAITLIST
-              WaitlistArray = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAddsArray, student.group, student.order);
+              WaitlistArray = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAddsArray, student.group, student.order, waitlistAddsToddler);
               if(WaitlistArray != null && WaitlistArray.length > 0){
                 for(var i = 0; i <= WaitlistArray.length-1; i++){
                   forecastArray.push(WaitlistArray[i]);
@@ -424,10 +444,10 @@ Template.forecast.events({
       }
       
     });
-     if(classroom == "INFANT"){
-      var waitlistOutArray = [];
+    //  if(classroom == "INFANT"){
+      
       if(waitlistAddsArray != null && waitlistAddsArray.length>0){
-        waitlistOutArray = GetWaitlistMoveOut(waitlistAddsArray,startDate,endDate);
+        waitlistOutArray = GetWaitlistMoveOut(waitlistAddsArray,startDate,endDate, classroom);
 
         var foreArrayTemp = forecastArray.slice();
         if(waitlistOutArray != null && waitlistOutArray.length > 0){
@@ -487,24 +507,26 @@ Template.forecast.events({
           }
         }
       }
-     }else if(classroom == "TODDLER"){
-        var WaitlistArray = [];
-        //SEE IF A STUDENT CAN BE ADDED FROM WAITLIST
-        WaitlistArray = checkWaitlist(classroom, endDate ,forecastArray, waitlistAddsArray, "INFANT" , "1" );
-        if(WaitlistArray != null && WaitlistArray.length > 0){
-          for(var i = 0; i <= WaitlistArray.length-1; i++){
-            forecastArray.push(WaitlistArray[i]);
-          }
-          if(WaitlistArray.length > 0){
-            mon = WaitlistArray[WaitlistArray.length - 1].monCount;
-            tues = WaitlistArray[WaitlistArray.length - 1].tueCount;
-            wed = WaitlistArray[WaitlistArray.length - 1].wedCount;
-            thur = WaitlistArray[WaitlistArray.length - 1].thurCount;
-            fri = WaitlistArray[WaitlistArray.length - 1].friCount;
-          }
-        }
-        arrayCount = forecastArray.length;
-     }
+    //  }
+    //  else if(classroom == "TODDLER"){
+      
+    //     var WaitlistArray = [];
+    //     //SEE IF A STUDENT CAN BE ADDED FROM WAITLIST
+    //     WaitlistArray = checkWaitlist(classroom, endDate ,forecastArray, waitlistAddsArray, "INFANT" , "1", null );
+    //     if(WaitlistArray != null && WaitlistArray.length > 0){
+    //       for(var i = 0; i <= WaitlistArray.length-1; i++){
+    //         forecastArray.push(WaitlistArray[i]);
+    //       }
+    //       if(WaitlistArray.length > 0){
+    //         mon = WaitlistArray[WaitlistArray.length - 1].monCount;
+    //         tues = WaitlistArray[WaitlistArray.length - 1].tueCount;
+    //         wed = WaitlistArray[WaitlistArray.length - 1].wedCount;
+    //         thur = WaitlistArray[WaitlistArray.length - 1].thurCount;
+    //         fri = WaitlistArray[WaitlistArray.length - 1].friCount;
+    //       }
+    //     }
+    //     arrayCount = forecastArray.length;
+    //  }
      var forecastModel = {
         movements: String,
         daysReq: String,
@@ -537,17 +559,17 @@ Template.forecast.events({
     console.log("forecastArray line 346" + forecastArray);
     forecastArray.push(forecastModel);
 
-
+   for(var index = 0; index < waitlistAddsArray.length; index++){
+     waitlistAddsToddler.push(waitlistAddsArray[index]);
+   }
     return forecastArray;
-  }
-  
-
+}
 
   /**
    *This method checks the waitlist of the currently selected classroom and finds the first student that would be available to take the spot
    * CALL THIS METHOD EVERYTIME A STUDENT TRANSITIONS OUT OF A CLASSROOM
     **/
-  function checkWaitlist(classroom, dateAval,forecastArray,waitlistAddsArray, studentGroup, studentOrder)//pass array with students on waitlist already added during current createModel instance
+  function checkWaitlist(classroom, dateAval,forecastArray,waitlistAddsArray, studentGroup, studentOrder, fromInfantWaitlistArray)//pass array with students on waitlist already added during current createModel instance
   {
     var WaitlistArray =[];
     var mon = 0;
@@ -584,244 +606,264 @@ Template.forecast.events({
     
     console.log(waitlistStudents);
     waitlistStudents.forEach(function(student){
-
-      var dateCheck;
-      if(classroom == "INFANT"){
-        dateCheck = student.startDate;
-      }else{
-        dateCheck = student.moveDate;
-      }
-
-      if(student.startDate != null && student.moveDate != null){
-
-        
-        console.log(student);
-            
-        //if the student desires to start before or after date of availability.
-        console.log("student.startDate");
-        console.log(student.startDate);
-        console.log("dateAval"); 
-        console.log(dateAval); 
-        if((classroom == "INFANT" && dateCheck <= dateAval) || (classroom == "TODDLER" && dateCheck <= dateAval)){
-          
-          //determine if any requested days could be added (variable)
-          
-          var atLeastTwoDays = 0;
-          var canBeAdded = false;
-          
-          var forecastModel = {
-            movements: String,
-            daysReq: String,
-            monCount: String,
-            tueCount:String,
-            wedCount:String,
-            thuCount: String,
-            friCount: String,
-            details: String,
-            type: String,
-            movementDate: Date
+      console.log("student id");
+      if(fromInfantWaitlistArray != null){
+        console.log(student.firstName);
+        console.log(student._id);
+        console.log(fromInfantWaitlistArray.indexOf(student._id));
+        var toddlerAdd = false;
+        for(var s = 0; s < fromInfantWaitlistArray.length; s++){
+          if(fromInfantWaitlistArray[s].id == student._id){
+            toddlerAdd = true;
           }
-          
-              
-          var waitlistAdd = {
-          daysGiven: String,
-          id: String
-          }
-              console.log("student.daysWaitlisted");
-            console.log(student.daysWaitlisted);
-            console.log(student.daysWaitlisted.length);
-            
-          var allIds = [];
-          
-          for(var w = 0; w<waitlistAddsArray.length; w++){
-          	allIds.push(waitlistAddsArray[w].id);
-          }
-            
-          if((waitlistAddsArray != null && waitlistAddsArray.length > 0  && allIds.indexOf(student._id)>=0) || (classroom == "INFANT" && student.moveDate <= dateAval)){
-                canBeAdded = false;
-            }
-            //see what days the current student wants
-          else {
-            for(var i=0;i<student.daysWaitlisted.length;i++){
-              console.log(i);
-              console.log(maxAllowed);
-              console.log(mon);
-              if("MONDAY" == student.daysWaitlisted[i].day){
-                if(mon<maxAllowed){
-                  atLeastTwoDays++;
-                  if(atLeastTwoDays >=2){
-                  	canBeAdded = true;
-                  }
-                }
-              }
-              else if("TUESDAY" == student.daysWaitlisted[i].day){
-                if(tues<maxAllowed){
-                  atLeastTwoDays++;
-                  if(atLeastTwoDays >=2){
-                  	canBeAdded = true;
-                  }
-                }
-              }
-              else if("WEDNESDAY" == student.daysWaitlisted[i].day){
-                if(wed<maxAllowed){
-                  atLeastTwoDays++;
-                  if(atLeastTwoDays >=2){
-                  	canBeAdded = true;
-                  }
-                }
-              }
-              else if("THURSDAY" == student.daysWaitlisted[i].day){
-                if(thur<maxAllowed){
-                  atLeastTwoDays++;
-                  if(atLeastTwoDays >=2){
-                  	canBeAdded = true;
-                  }
-                }
-              }
-              else if("FRIDAY" == student.daysWaitlisted[i].day){
-                if(fri<maxAllowed){
-                  atLeastTwoDays++;
-                  if(atLeastTwoDays >=2){
-                  	canBeAdded = true;
-                  }
-                }
-              }
-              console.log(i);
-            }
-          }
-            var forecastStartDate = new Date(Session.get("forecastStartDate"));
-            if(canBeAdded == true){
-            waitlistAdd.daysGiven = "";
-            forecastModel.movements = " (Days Given: ";
-              for(var i=0;i<student.daysWaitlisted.length;i++){
-              
-              if("MONDAY" == student.daysWaitlisted[i].day){
-                if(mon<maxAllowed){
-                   mon++;
-                  forecastModel.monCount = mon;
-                  forecastModel.movements += "M ";
-                  waitlistAdd.daysGiven += "M";
-                }
-              }
-              else if("TUESDAY" == student.daysWaitlisted[i].day){
-                if(tues<maxAllowed){
-                  tues++;
-                  forecastModel.tueCount = tues;
-                  forecastModel.movements += "T ";
-                  waitlistAdd.daysGiven += "T";
-                }
-              }
-              else if("WEDNESDAY" == student.daysWaitlisted[i].day){
-                if(wed<maxAllowed){
-                  wed++;
-                  forecastModel.wedCount = wed;
-                  forecastModel.movements += "W ";
-                  waitlistAdd.daysGiven += "W";
-
-                }
-              }
-              else if("THURSDAY" == student.daysWaitlisted[i].day){
-                if(thur<maxAllowed){
-                  thur++;
-                  forecastModel.thuCount = thur;
-                  forecastModel.movements += "TH ";
-                  waitlistAdd.daysGiven += "H";
-                }
-              }
-              else if("FRIDAY" == student.daysWaitlisted[i].day){
-                if(fri<maxAllowed){
-                  fri++;
-                  forecastModel.friCount = fri;
-                  forecastModel.movements += "F ";
-                  waitlistAdd.daysGiven += "F";
-                }
-              }
-
-            }
-            forecastModel.movements += ") ";
-                  console.log("before movements");
-                  console.log(classroom);
-                  if(classroom == "TODDLER"){
-
-                    console.log(dateCheck);
-                    if(forecastArray.length==1){
-                    	forecastModel.movements = "As of " + formatDate(student.moveDate) + " with " + student.firstName + " " + student.lastName+forecastModel.movements ;
-                    }else{
-                    	forecastModel.movements = "As of " + formatDate(dateAval) + " with " + student.firstName + " " + student.lastName+forecastModel.movements;
-                    }
-                  }else{
-                  	if(forecastArray.length==1){
-                  		if(student.startDate < forecastStartDate){
-                  			forecastModel.movements = "As of " + formatDate(forecastStartDate) + " with " + student.firstName + " " + student.lastName+forecastModel.movements;
-                  		}else{
-                  			forecastModel.movements = "As of " + formatDate(student.startDate) + " with " + student.firstName + " " + student.lastName+forecastModel.movements;
-                  		}
-                  	}else{
-                    	forecastModel.movements = "As of " + formatDate(dateAval) + " with " + student.firstName + " " + student.lastName+forecastModel.movements;
-                    }
-                  }
-                  forecastModel.daysReq ="Days Waitlisted: ";
-                  
-                  for(var x=0;x<student.daysWaitlisted.length;x++){
-                	if("MONDAY" == student.daysWaitlisted[x].day){
-            		  forecastModel.daysReq += " M ";
-          	        }
-          	   		if("TUESDAY" == student.daysWaitlisted[x].day){
-                      forecastModel.daysReq += " T ";
-                    }
-                    if("WEDNESDAY" == student.daysWaitlisted[x].day){
-                      forecastModel.daysReq += " W ";
-                    }
-                    if("THURSDAY" == student.daysWaitlisted[x].day){
-                      forecastModel.daysReq += " TH ";
-                    }
-                    if("FRIDAY" == student.daysWaitlisted[x].day){
-                      forecastModel.daysReq += " F ";
-                    }
-                  }  
-                  if(classroom == "TODDLER"){
-                    if(forecastArray.length==1){
-                    	forecastModel.movementDate = student.moveDate;
-                    }else{
-                      forecastModel.movementDate = dateCheck;
-                    }
-                  }else{
-                    	if(forecastArray.length==1){
-                        if(student.startDate < forecastStartDate){
-                          forecastModel.movementDate = forecastStartDate;
-                        }else{
-                          forecastModel.movementDate = student.startDate;
-                        }
-                  	  }else{
-                        forecastModel.movementDate = dateAval;
-                      }
-                  }
-                  console.log(forecastModel.movements);
-                  forecastModel.monCount = mon;
-                  forecastModel.tueCount = tues;
-                  forecastModel.wedCount = wed;
-                  forecastModel.thuCount = thur;
-                  forecastModel.friCount = fri;
-                  forecastModel.details = student.details;
-                  forecastModel.type = student.type;
-                  forecastModel.status = student.status;
-                  waitlistAdd.id = student._id;
-                  waitlistAddsArray.push(waitlistAdd);
-                  WaitlistArray.push(forecastModel);
-              
-            }
-        
         }
       }
+      if(classroom == "INFANT" || (classroom == "TODDLER" && fromInfantWaitlistArray != null && toddlerAdd)){
+        var dateCheck;
+        if(classroom == "INFANT"){
+          dateCheck = student.startDate;
+        }else{
+          dateCheck = student.moveDate;
+        }
+
+        if(student.startDate != null && student.moveDate != null){
+
+          
+          console.log(student);
+              
+          //if the student desires to start before or after date of availability.
+          console.log("student.startDate");
+          console.log(student.startDate);
+          console.log("dateAval"); 
+          console.log(dateAval); 
+          if((classroom == "INFANT" && dateCheck <= dateAval) || (classroom == "TODDLER" && dateCheck <= dateAval)){
+            
+            //determine if any requested days could be added (variable)
+            
+            var atLeastTwoDays = 0;
+            var canBeAdded = false;
+            
+            var forecastModel = {
+              movements: String,
+              daysReq: String,
+              monCount: String,
+              tueCount:String,
+              wedCount:String,
+              thuCount: String,
+              friCount: String,
+              details: String,
+              type: String,
+              movementDate: Date
+            }
+            
+                
+            var waitlistAdd = {
+            daysGiven: String,
+            id: String
+            }
+                console.log("student.daysWaitlisted");
+              console.log(student.daysWaitlisted);
+              console.log(student.daysWaitlisted.length);
+              
+            var allIds = [];
+            
+            for(var w = 0; w<waitlistAddsArray.length; w++){
+              allIds.push(waitlistAddsArray[w].id);
+            }
+              
+            if(((classroom == "INFANT" && waitlistAddsArray != null && waitlistAddsArray.length > 0  && allIds.indexOf(student._id)>=0) || (classroom == "INFANT" && student.moveDate <= dateAval)) || (classroom == "TODDLER" && student.moveDate > dateAval)){
+                  console.log("cant be added?")
+                  canBeAdded = false;
+            }
+              //see what days the current student wants
+            else {
+              if(classroom == "TODDLER"){
+                canBeAdded = true;
+              }else{
+                for(var i=0;i<student.daysWaitlisted.length;i++){
+                  console.log(i);
+                  console.log(maxAllowed);
+                  console.log(mon);
+                  if("MONDAY" == student.daysWaitlisted[i].day){
+                    if(mon<maxAllowed){
+                      atLeastTwoDays++;
+                      if(atLeastTwoDays >=2){
+                        canBeAdded = true;
+                      }
+                    }
+                  }
+                  else if("TUESDAY" == student.daysWaitlisted[i].day){
+                    if(tues<maxAllowed){
+                      atLeastTwoDays++;
+                      if(atLeastTwoDays >=2){
+                        canBeAdded = true;
+                      }
+                    }
+                  }
+                  else if("WEDNESDAY" == student.daysWaitlisted[i].day){
+                    if(wed<maxAllowed){
+                      atLeastTwoDays++;
+                      if(atLeastTwoDays >=2){
+                        canBeAdded = true;
+                      }
+                    }
+                  }
+                  else if("THURSDAY" == student.daysWaitlisted[i].day){
+                    if(thur<maxAllowed){
+                      atLeastTwoDays++;
+                      if(atLeastTwoDays >=2){
+                        canBeAdded = true;
+                      }
+                    }
+                  }
+                  else if("FRIDAY" == student.daysWaitlisted[i].day){
+                    if(fri<maxAllowed){
+                      atLeastTwoDays++;
+                      if(atLeastTwoDays >=2){
+                        canBeAdded = true;
+                      }
+                    }
+                  }
+                  console.log(i);
+                }
+              }
+            }
+              var forecastStartDate = new Date(Session.get("forecastStartDate"));
+              if(canBeAdded == true){
+              waitlistAdd.daysGiven = "";
+              forecastModel.movements = " (Days Given: ";
+                for(var i=0;i<student.daysWaitlisted.length;i++){
+                
+                if("MONDAY" == student.daysWaitlisted[i].day){
+                  if(mon<maxAllowed){
+                    mon++;
+                    forecastModel.monCount = mon;
+                    forecastModel.movements += "M ";
+                    waitlistAdd.daysGiven += "M";
+                  }
+                }
+                else if("TUESDAY" == student.daysWaitlisted[i].day){
+                  if(tues<maxAllowed){
+                    tues++;
+                    forecastModel.tueCount = tues;
+                    forecastModel.movements += "T ";
+                    waitlistAdd.daysGiven += "T";
+                  }
+                }
+                else if("WEDNESDAY" == student.daysWaitlisted[i].day){
+                  if(wed<maxAllowed){
+                    wed++;
+                    forecastModel.wedCount = wed;
+                    forecastModel.movements += "W ";
+                    waitlistAdd.daysGiven += "W";
+
+                  }
+                }
+                else if("THURSDAY" == student.daysWaitlisted[i].day){
+                  if(thur<maxAllowed){
+                    thur++;
+                    forecastModel.thuCount = thur;
+                    forecastModel.movements += "TH ";
+                    waitlistAdd.daysGiven += "H";
+                  }
+                }
+                else if("FRIDAY" == student.daysWaitlisted[i].day){
+                  if(fri<maxAllowed){
+                    fri++;
+                    forecastModel.friCount = fri;
+                    forecastModel.movements += "F ";
+                    waitlistAdd.daysGiven += "F";
+                  }
+                }
+
+              }
+              forecastModel.movements += ") ";
+                    console.log("before movements");
+                    console.log(classroom);
+                    if(classroom == "TODDLER"){
+
+                      console.log(dateCheck);
+                      if(forecastArray.length==1){
+                        forecastModel.movements = "As of " + formatDate(student.moveDate) + " with " + student.firstName + " " + student.lastName+forecastModel.movements ;
+                      }else{
+                        forecastModel.movements = "As of " + formatDate(student.moveDate) + " with " + student.firstName + " " + student.lastName+forecastModel.movements;
+                      }
+                    }else{
+                      if(forecastArray.length==1){
+                        if(student.startDate < forecastStartDate){
+                          forecastModel.movements = "As of " + formatDate(forecastStartDate) + " with " + student.firstName + " " + student.lastName+forecastModel.movements;
+                        }else{
+                          forecastModel.movements = "As of " + formatDate(student.startDate) + " with " + student.firstName + " " + student.lastName+forecastModel.movements;
+                        }
+                      }else{
+                        forecastModel.movements = "As of " + formatDate(dateAval) + " with " + student.firstName + " " + student.lastName+forecastModel.movements;
+                      }
+                    }
+                    forecastModel.daysReq ="Days Waitlisted: ";
+                    
+                    for(var x=0;x<student.daysWaitlisted.length;x++){
+                    if("MONDAY" == student.daysWaitlisted[x].day){
+                    forecastModel.daysReq += " M ";
+                      }
+                    if("TUESDAY" == student.daysWaitlisted[x].day){
+                        forecastModel.daysReq += " T ";
+                      }
+                      if("WEDNESDAY" == student.daysWaitlisted[x].day){
+                        forecastModel.daysReq += " W ";
+                      }
+                      if("THURSDAY" == student.daysWaitlisted[x].day){
+                        forecastModel.daysReq += " TH ";
+                      }
+                      if("FRIDAY" == student.daysWaitlisted[x].day){
+                        forecastModel.daysReq += " F ";
+                      }
+                    }  
+                    if(classroom == "TODDLER"){
+                      if(forecastArray.length==1){
+                        forecastModel.movementDate = student.moveDate;
+                      }else{
+                        forecastModel.movementDate = dateCheck;
+                      }
+                    }else{
+                        if(forecastArray.length==1){
+                          if(student.startDate < forecastStartDate){
+                            forecastModel.movementDate = forecastStartDate;
+                          }else{
+                            forecastModel.movementDate = student.startDate;
+                          }
+                        }else{
+                          forecastModel.movementDate = dateAval;
+                        }
+                    }
+                    console.log(forecastModel.movements);
+                    forecastModel.monCount = mon;
+                    forecastModel.tueCount = tues;
+                    forecastModel.wedCount = wed;
+                    forecastModel.thuCount = thur;
+                    forecastModel.friCount = fri;
+                    forecastModel.details = student.details;
+                    forecastModel.type = student.type;
+                    forecastModel.status = student.status;
+                    waitlistAdd.id = student._id;
+                    waitlistAddsArray.push(waitlistAdd);
+                    WaitlistArray.push(forecastModel);
+                
+              }
+          
+          }
+        }
+    }
    });
    return WaitlistArray;
 }
 
-function GetWaitlistMoveOut(waitlistAddsArray, startDate, endDate)
+function GetWaitlistMoveOut(waitlistAddsArray, startDate, endDate, classroom)
 {
 
 
   var waitlistOutArray = [];
+  console.log("line 865 waitlistAddsArray");
+  console.log(waitlistAddsArray);
   for(var count = 0; count < waitlistAddsArray.length; count++){
  
     var student = Students.findOne({_id: waitlistAddsArray[count].id});
@@ -830,11 +872,17 @@ function GetWaitlistMoveOut(waitlistAddsArray, startDate, endDate)
           var wed = 0;
           var thur = 0;
           var fri = 0;
+           console.log("line 875");
+          var date = student.moveDate;
+          console.log("line 877");
+          if(classroom == "TODDLER"){
+            date.setMonth(student.moveDate.getMonth() + 30);
+          }
           console.log("out id");
             console.log("out first name");
             console.log(student.firstName);
             console.log(student.lastName);
-            if(student.moveDate < endDate){
+            if(date < endDate){
                 var forecastModel = {
               movements: String,
               daysReq: String,
@@ -847,7 +895,8 @@ function GetWaitlistMoveOut(waitlistAddsArray, startDate, endDate)
                   type: String,
                   movementDate: Date
                 };
-              forecastModel.movements = "As of " + formatDate(student.moveDate) + " without " + student.firstName + " " + student.lastName + " (Days Given: ";
+                
+              forecastModel.movements = "As of " + formatDate(date) + " without " + student.firstName + " " + student.lastName + " (Days Given: ";
               forecastModel.daysReq ="Days Waitlisted: ";
                   
                   for(var x=0;x<student.daysWaitlisted.length;x++){
@@ -867,7 +916,7 @@ function GetWaitlistMoveOut(waitlistAddsArray, startDate, endDate)
                       forecastModel.daysReq += " F ";
                     }
                   }  
-              forecastModel.movementDate = student.moveDate;
+              forecastModel.movementDate = date;
               forecastModel.details = student.details;
               forecastModel.type = student.type;
               forecastModel.status = student.status;
