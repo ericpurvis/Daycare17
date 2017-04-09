@@ -222,6 +222,20 @@ function createForecast(classroom, startDate, timeFrameString, id)
         fri = initWaitlistArray[initWaitlistArray.length - 1].friCount;
         }
     }
+    
+    var waitlistOutArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,student.moveDate);
+    if(waitlistOutArray.length > 0){
+        for(var i = 0; i < waitlistOutArray.length; i++){
+          forecastArray.push(waitlistOutArray[i]);
+        }
+        mon = waitlistOutArray[waitlistOutArray.length - 1].monCount;
+        tues = waitlistOutArray[waitlistOutArray.length - 1].tueCount;
+        wed = waitlistOutArray[waitlistOutArray.length - 1].wedCount;
+        thur = waitlistOutArray[waitlistOutArray.length - 1].thuCount;
+        fri = waitlistOutArray[waitlistOutArray.length - 1].friCount;
+        }
+    
+    
       
     if(student.moveDate > startDate && student.moveDate < endDate && classroom == "INFANT"){
 
@@ -444,6 +458,7 @@ function createForecast(classroom, startDate, timeFrameString, id)
       }
       
     });
+
     //  if(classroom == "INFANT"){
       
       if(waitlistAddsArray != null && waitlistAddsArray.length>0){
@@ -527,6 +542,7 @@ function createForecast(classroom, startDate, timeFrameString, id)
     //     }
     //     arrayCount = forecastArray.length;
     //  }
+  
      var forecastModel = {
         movements: String,
         daysReq: String,
@@ -585,14 +601,14 @@ function createForecast(classroom, startDate, timeFrameString, id)
     }
   
     //get last entry for up-to-date availability
-    if(forecastArray.length > 0){
+
       var lastEntry = forecastArray[forecastArray.length - 1];
       mon = lastEntry.monCount;
       tues = lastEntry.tueCount;
       wed = lastEntry.wedCount;
       thur = lastEntry.thuCount;
       fri = lastEntry.friCount;
-    }
+    
       
 
     //pull all waitlist students waiting for current room
@@ -604,7 +620,6 @@ function createForecast(classroom, startDate, timeFrameString, id)
        var waitlistStudents = Students.find({$or: [{status:"WAITLIST"}, {status:"PARTIALLY_ENROLLED"}], group: "INFANT"}, {sort:{order:1}});
     }
     
-    console.log(waitlistStudents);
     waitlistStudents.forEach(function(student){
       console.log("student id");
       if(fromInfantWaitlistArray != null){
@@ -859,8 +874,6 @@ function createForecast(classroom, startDate, timeFrameString, id)
 
 function GetWaitlistMoveOut(waitlistAddsArray, startDate, endDate, classroom)
 {
-
-
   var waitlistOutArray = [];
   console.log("line 865 waitlistAddsArray");
   console.log(waitlistAddsArray);
@@ -981,7 +994,14 @@ function formatDate(date){
 }
 
 
- 
+ function sortByMoveOut(a, b) {
+    if (a.dateMovingOut === b.dateMovingOut) {
+        return 0;
+    }
+    else {
+        return (a.dateMovingOut < b.dateMovingOut) ? -1 : 1;
+    }
+}
   
 
 
