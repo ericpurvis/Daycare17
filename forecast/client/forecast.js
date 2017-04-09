@@ -833,7 +833,7 @@ function GetWaitlistMoveOut(forecastArray, waitlistAddsArray, startDate, endDate
           //}
 
 
-            if(student.moveDate <= endDate){
+            if(waitlistAddsArray[count].dateMovingOut <= endDate){
             
                 var forecastModel = {
               movements: String,
