@@ -636,7 +636,7 @@ function createForecast(classroom, startDate, timeFrameString, id)
             }
               //see what days the current student wants
             else {
-              if(classroom == "TODDLER"){
+              if(classroom == "TODDLER" && waitlistAddsArray.indexOf(student._id) < 0){
                 canBeAdded = true;
               }else{
                 for(var i=0;i<student.daysWaitlisted.length;i++){
