@@ -217,10 +217,7 @@ function createForecast(classroom, startDate, timeFrameString, id)
       }else{
       forecastArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAddsArray, classroom, "1", null );
       }
-      //if(initWaitlistArray.length > 0){
-       // for(var i = 0; i < initWaitlistArray.length; i++){
-         // forecastArray.push(initWaitlistArray[i]);
-       // }
+
         mon = forecastArray[forecastArray.length - 1].monCount;
         tues = forecastArray[forecastArray.length - 1].tueCount;
         wed = forecastArray[forecastArray.length - 1].wedCount;
@@ -236,15 +233,11 @@ function createForecast(classroom, startDate, timeFrameString, id)
     }else{
     forecastArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,endDate,classroom,studentsTakenOut );
     }
-    //if(waitlistOutArray.length > 0){
-       // for(var i = 0; i < waitlistOutArray.length; i++){
-         // forecastArray.push(waitlistOutArray[i]);
-       // }
-        mon = forecastArray[forecastArray.length - 1].monCount;
-        tues = forecastArray[forecastArray.length - 1].tueCount;
-        wed = forecastArray[forecastArray.length - 1].wedCount;
-        thur = forecastArray[forecastArray.length - 1].thuCount;
-        fri = forecastArray[forecastArray.length - 1].friCount;
+    mon = forecastArray[forecastArray.length - 1].monCount;
+    tues = forecastArray[forecastArray.length - 1].tueCount;
+    wed = forecastArray[forecastArray.length - 1].wedCount;
+    thur = forecastArray[forecastArray.length - 1].thuCount;
+    fri = forecastArray[forecastArray.length - 1].friCount;
         
         
       
@@ -290,23 +283,19 @@ function createForecast(classroom, startDate, timeFrameString, id)
         arrayCount++;
 
 
-        forecastArray = checkWaitlist(classroom, endDate, forecastArray, waitlistAddsArray, student.group, student.order, null );
+        forecastArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAddsArray, student.group, student.order, null );
         
-        //if(WaitlistArray != null && WaitlistArray.length > 0){
-          //for(var i = 0; i < WaitlistArray.length; i++){
-            //forecastArray.push(WaitlistArray[i]);
-          //}
 
-                  mon = forecastArray[forecastArray.length - 1].monCount;
-                  tues = forecastArray[forecastArray.length - 1].tueCount;
-                  wed = forecastArray[forecastArray.length - 1].wedCount;
-                  thur = forecastArray[forecastArray.length - 1].thurCount;
-                  fri = forecastArray[forecastArray.length - 1].friCount;
+
+        mon = forecastArray[forecastArray.length - 1].monCount;
+        tues = forecastArray[forecastArray.length - 1].tueCount;
+        wed = forecastArray[forecastArray.length - 1].wedCount;
+        thur = forecastArray[forecastArray.length - 1].thurCount;
+        fri = forecastArray[forecastArray.length - 1].friCount;
           
         
         arrayCount = forecastArray.length;
-        console.log("Students to add");
-        console.log(forecastArray);
+
 
         //Pull all students (infant and toddler) that are enrolled and fit this range
       }else if(student.moveDate > startDate && student.moveDate < endDate && classroom == "TODDLER"){
@@ -315,25 +304,15 @@ function createForecast(classroom, startDate, timeFrameString, id)
           if (student.group=="INFANT"){
               
               
-              forecastArray = checkWaitlist(classroom, endDate, forecastArray, waitlistAddsArray, student.group, student.order, waitlistAddsToddler );
-              
-              if(student.moveDate < endDate){
-                 forecastArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,student.moveDate,classroom,studentsTakenOut );
-              }else{
-                 forecastArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,endDate,classroom,studentsTakenOut );
-              }
+              forecastArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAddsArray, student.group, student.order, waitlistAddsToddler );
+              forecastArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,student.moveDate,classroom,studentsTakenOut );
 
-              
-              //if(WaitlistArray != null && WaitlistArray.length > 0){
-                //for(var i = 0; i <= WaitlistArray.length-1; i++){
-                  //forecastArray.push(WaitlistArray[i]);
-                //}
- 
-                  mon = forecastArray[forecastArray.length - 1].monCount;
-                  tues = forecastArray[forecastArray.length - 1].tueCount;
-                  wed = forecastArray[forecastArray.length - 1].wedCount;
-                  thur = forecastArray[forecastArray.length - 1].thurCount;
-                  fri = forecastArray[forecastArray.length - 1].friCount;
+
+                mon = forecastArray[forecastArray.length - 1].monCount;
+                tues = forecastArray[forecastArray.length - 1].tueCount;
+                wed = forecastArray[forecastArray.length - 1].wedCount;
+                thur = forecastArray[forecastArray.length - 1].thurCount;
+                fri = forecastArray[forecastArray.length - 1].friCount;
                 
               
               arrayCount = forecastArray.length;
@@ -403,9 +382,8 @@ function createForecast(classroom, startDate, timeFrameString, id)
              }
             //add model
             forecastArray.push(forecastModel);   
-             console.log("forecastArray line 327");
             arrayCount = forecastArray.length;
-            console.log("forecastArray line 329");
+
           }
           
           //If student is a toddler then print "without" and act decrement each day accordingly
@@ -413,16 +391,8 @@ function createForecast(classroom, startDate, timeFrameString, id)
 
               //SEE IF A STUDENT CAN BE ADDED FROM WAITLIST
               forecastArray = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAddsArray, student.group, student.order, waitlistAddsToddler);
-              //if(WaitlistArray != null && WaitlistArray.length > 0){
-                //for(var i = 0; i <= WaitlistArray.length-1; i++){
-                  //forecastArray.push(WaitlistArray[i]);
-               // }
-               
-               if(student.moveDate < endDate){
-                  forecastArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,student.moveDate,classroom,studentsTakenOut );
-               }else{
-                  forecastArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,endDate,classroom,studentsTakenOut );
-               }
+              forecastArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,student.moveDate,classroom,studentsTakenOut );
+
                 
                   mon = forecastArray[forecastArray.length - 1].monCount;
                   tues = forecastArray[forecastArray.length - 1].tueCount;
@@ -431,7 +401,7 @@ function createForecast(classroom, startDate, timeFrameString, id)
                   fri = forecastArray[forecastArray.length - 1].friCount;
                 
               
-              arrayCount = forecastArray.length;
+            arrayCount = forecastArray.length;
             forecastModel.movements = "As of " + formatDate(student.moveDate) + " without " + student.firstName + " " + student.lastName;
             forecastModel.daysReq =" ";
             forecastModel.movementDate = student.moveDate;
@@ -478,35 +448,16 @@ function createForecast(classroom, startDate, timeFrameString, id)
        //console.log("Student not in range");
       }
       
-      if(student.moveDate < endDate){
-        forecastArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,student.moveDate,classroom,studentsTakenOut );
-      }else{
-        forecastArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,endDate,classroom,studentsTakenOut );
-      }
-       //if(waitlistOutArray.length > 0){
-        //for(var i = 0; i < waitlistOutArray.length; i++){
-          //forecastArray.push(waitlistOutArray[i]);
-        //}
-        mon = forecastArray[forecastArray.length - 1].monCount;
-        tues = forecastArray[forecastArray.length - 1].tueCount;
-        wed = forecastArray[forecastArray.length - 1].wedCount;
-        thur = forecastArray[forecastArray.length - 1].thuCount;
-        fri = forecastArray[forecastArray.length - 1].friCount;
-        
-        
     });
 
-      //check waitlist one last time 
+    //check waitlist one last time 
     forecastArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,endDate,classroom, studentsTakenOut);
-    //if(waitlistOutArray.length > 0){
-       // for(var i = 0; i < waitlistOutArray.length; i++){
-          //forecastArray.push(waitlistOutArray[i]);
-        //}
-        mon = forecastArray[forecastArray.length - 1].monCount;
-        tues = forecastArray[forecastArray.length - 1].tueCount;
-        wed = forecastArray[forecastArray.length - 1].wedCount;
-        thur = forecastArray[forecastArray.length - 1].thuCount;
-        fri = forecastArray[forecastArray.length - 1].friCount;
+
+    mon = forecastArray[forecastArray.length - 1].monCount;
+    tues = forecastArray[forecastArray.length - 1].tueCount;
+    wed = forecastArray[forecastArray.length - 1].wedCount;
+    thur = forecastArray[forecastArray.length - 1].thuCount;
+    fri = forecastArray[forecastArray.length - 1].friCount;
         
         
 
@@ -666,7 +617,7 @@ function createForecast(classroom, startDate, timeFrameString, id)
             }
               //see what days the current student wants
             else {
-              if(classroom == "TODDLER"){
+              if(classroom == "TODDLER" ){
                 canBeAdded = true;
               }else{
                 for(var i=0;i<student.daysWaitlisted.length;i++){
