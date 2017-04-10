@@ -310,7 +310,7 @@ function createForecast(classroom, startDate, timeFrameString, id)
                 mon = forecastArray[forecastArray.length - 1].monCount;
                 tues = forecastArray[forecastArray.length - 1].tueCount;
                 wed = forecastArray[forecastArray.length - 1].wedCount;
-                thur = forecastArray[forecastArray.length - 1].thurCount;
+                thur = forecastArray[forecastArray.length - 1].thuCount;
                 fri = forecastArray[forecastArray.length - 1].friCount;
                 
               
@@ -603,7 +603,11 @@ function createForecast(classroom, startDate, timeFrameString, id)
               type: String,
               movementDate: Date
             }
-            
+            forecastModel.monCount = 0;
+            forecastModel.tueCount = 0;
+            forecastModel.wedCount = 0;
+            forecastModel.thuCount = 0;
+            forecastModel.friCount = 0;
                 
             var waitlistAdd = {
             dateMovingOut: Date,
