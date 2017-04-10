@@ -316,6 +316,12 @@ function createForecast(classroom, startDate, timeFrameString, id)
               
               
               forecastArray = checkWaitlist(classroom, endDate, forecastArray, waitlistAddsArray, student.group, student.order, waitlistAddsToddler );
+              
+              if(student.moveDate < endDate){
+                 forecastArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,student.moveDate,classroom,studentsTakenOut );
+              }else{
+                 forecastArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,endDate,classroom,studentsTakenOut );
+              }
 
               
               //if(WaitlistArray != null && WaitlistArray.length > 0){
@@ -411,6 +417,12 @@ function createForecast(classroom, startDate, timeFrameString, id)
                 //for(var i = 0; i <= WaitlistArray.length-1; i++){
                   //forecastArray.push(WaitlistArray[i]);
                // }
+               
+               if(student.moveDate < endDate){
+                  forecastArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,student.moveDate,classroom,studentsTakenOut );
+               }else{
+                  forecastArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,endDate,classroom,studentsTakenOut );
+               }
                 
                   mon = forecastArray[forecastArray.length - 1].monCount;
                   tues = forecastArray[forecastArray.length - 1].tueCount;
