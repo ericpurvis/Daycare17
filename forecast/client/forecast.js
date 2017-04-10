@@ -448,7 +448,7 @@ function createForecast(classroom, startDate, timeFrameString, id)
             forecastArray = checkWaitlistTodderOnly("TODDLER",student.moveDate,forecastArray, waitlistAddsArray, classroom, "1", waitlistAddsToddler);
           }
           
-          
+          forecastArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,student.moveDate,classroom, studentsTakenOut);
       }else{
        //console.log("Student not in range");
       }
