@@ -214,6 +214,7 @@ function createForecast(classroom, startDate, timeFrameString, id)
     if(forecastArray.length == 1){
       if(classroom == 'TODDLER'){
       forecastArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAddsArray, classroom, "1", waitlistAddsToddler );
+      forecastArray = checkWaitlistTodderOnly("TODDLER",student.moveDate,forecastArray, waitlistAddsArray, classroom, "1", waitlistAddsToddler);
       }else{
       forecastArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAddsArray, classroom, "1", null );
       }
@@ -303,8 +304,6 @@ function createForecast(classroom, startDate, timeFrameString, id)
           //If student is an infant then print "with"
           if (student.group=="INFANT"){
               
-              
-              forecastArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAddsArray, student.group, student.order, waitlistAddsToddler );
               forecastArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,student.moveDate,classroom,studentsTakenOut );
 
 
@@ -383,6 +382,9 @@ function createForecast(classroom, startDate, timeFrameString, id)
             //add model
             forecastArray.push(forecastModel);   
             arrayCount = forecastArray.length;
+            
+            forecastArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAddsArray, student.group, student.order, waitlistAddsToddler );
+            forecastArray = checkWaitlistTodderOnly("TODDLER",student.moveDate,forecastArray, waitlistAddsArray, classroom, "1", waitlistAddsToddler);
 
           }
           
@@ -391,6 +393,7 @@ function createForecast(classroom, startDate, timeFrameString, id)
 
               //SEE IF A STUDENT CAN BE ADDED FROM WAITLIST
               forecastArray = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAddsArray, student.group, student.order, waitlistAddsToddler);
+              forecastArray = checkWaitlistTodderOnly("TODDLER",student.moveDate,forecastArray, waitlistAddsArray, classroom, "1", waitlistAddsToddler);
               forecastArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,student.moveDate,classroom,studentsTakenOut );
 
                 
@@ -441,6 +444,8 @@ function createForecast(classroom, startDate, timeFrameString, id)
             arrayCount++;
 
             arrayCount = forecastArray.length;
+            forecastArray = checkWaitlist(classroom, student.moveDate ,forecastArray,waitlistAddsArray, student.group, student.order, waitlistAddsToddler);
+            forecastArray = checkWaitlistTodderOnly("TODDLER",student.moveDate,forecastArray, waitlistAddsArray, classroom, "1", waitlistAddsToddler);
           }
           
           
@@ -775,7 +780,9 @@ function createForecast(classroom, startDate, timeFrameString, id)
                           forecastModel.movementDate = dateAval;
                         }
                     }
-                    console.log(forecastModel.movements);
+                    if(waitlistAdd.daysGiven.length ==4){
+                      forecastModel.movements = "***"+forecastModel.movements;
+                    }
                     forecastModel.monCount = mon;
                     forecastModel.tueCount = tues;
                     forecastModel.wedCount = wed;
@@ -916,6 +923,240 @@ function GetWaitlistMoveOut(forecastArray, waitlistAddsArray, startDate, endDate
 
   }
   return forecastArray;
+}
+
+function checkWaitlistTodderOnly(classroom, dateAval,forecastArray,waitlistAddsArray, studentGroup, studentOrder, fromInfantWaitlistArray)//pass array with students on waitlist already added during current createModel instance
+  {
+    var mon = 0;
+    var tues = 0;
+    var wed = 0;
+    var thur = 0;
+    var fri = 0;
+      
+    //save max values
+    var maxAllowed = 12;
+  
+    //get last entry for up-to-date availability
+
+      var lastEntry = forecastArray[forecastArray.length - 1];
+      mon = lastEntry.monCount;
+      tues = lastEntry.tueCount;
+      wed = lastEntry.wedCount;
+      thur = lastEntry.thuCount;
+      fri = lastEntry.friCount;
+    
+      
+
+    //pull all waitlist students waiting for current room
+    
+
+
+    var waitlistStudents = Students.find({$or: [{status:"WAITLIST"}, {status:"PARTIALLY_ENROLLED"}], group: "TODDLER"}, {sort:{order:1}});
+
+    
+    waitlistStudents.forEach(function(student){
+    
+      //get last entry for up-to-date availability
+
+      var lastEntry = forecastArray[forecastArray.length - 1];
+      mon = lastEntry.monCount;
+      tues = lastEntry.tueCount;
+      wed = lastEntry.wedCount;
+      thur = lastEntry.thuCount;
+      fri = lastEntry.friCount;
+
+
+        if(student.startDate != null && student.moveDate != null){
+
+          
+          console.log(student);
+    
+          if(student.startDate <= dateAval){
+            
+            //determine if any requested days could be added (variable)
+            
+            var atLeastTwoDays = 0;
+            var canBeAdded = false;
+            
+            var forecastModel = {
+              movements: String,
+              daysReq: String,
+              monCount: String,
+              tueCount:String,
+              wedCount:String,
+              thuCount: String,
+              friCount: String,
+              details: String,
+              type: String,
+              movementDate: Date
+            }
+            
+                
+            var waitlistAdd = {
+            dateMovingOut: Date,
+            daysGiven: String,
+            id: String
+            }
+              
+            var allIds = [];
+            
+            for(var w = 0; w<waitlistAddsArray.length; w++){
+              allIds.push(waitlistAddsArray[w].id);
+            }
+              
+            if(student.moveDate > dateAval || allIds.indexOf(student._id) >=0){
+                  canBeAdded = false;
+            }
+              //see what days the current student wants
+            else{
+                for(var i=0;i<student.daysWaitlisted.length;i++){
+
+                  if("MONDAY" == student.daysWaitlisted[i].day){
+                    if(mon<maxAllowed){
+                      atLeastTwoDays++;
+                      if(atLeastTwoDays >=2){
+                        canBeAdded = true;
+                      }
+                    }
+                  }
+                  else if("TUESDAY" == student.daysWaitlisted[i].day){
+                    if(tues<maxAllowed){
+                      atLeastTwoDays++;
+                      if(atLeastTwoDays >=2){
+                        canBeAdded = true;
+                      }
+                    }
+                  }
+                  else if("WEDNESDAY" == student.daysWaitlisted[i].day){
+                    if(wed<maxAllowed){
+                      atLeastTwoDays++;
+                      if(atLeastTwoDays >=2){
+                        canBeAdded = true;
+                      }
+                    }
+                  }
+                  else if("THURSDAY" == student.daysWaitlisted[i].day){
+                    if(thur<maxAllowed){
+                      atLeastTwoDays++;
+                      if(atLeastTwoDays >=2){
+                        canBeAdded = true;
+                      }
+                    }
+                  }
+                  else if("FRIDAY" == student.daysWaitlisted[i].day){
+                    if(fri<maxAllowed){
+                      atLeastTwoDays++;
+                      if(atLeastTwoDays >=2){
+                        canBeAdded = true;
+                      }
+                    }
+                  }
+                  console.log(i);
+                }
+              }
+            }
+              var forecastStartDate = new Date(Session.get("forecastStartDate"));
+              if(canBeAdded == true){
+              waitlistAdd.daysGiven = "";
+              forecastModel.movements = " (Days Given: ";
+                for(var i=0;i<student.daysWaitlisted.length;i++){
+                
+                if("MONDAY" == student.daysWaitlisted[i].day){
+                  if(mon<maxAllowed){
+                    mon++;
+                    forecastModel.monCount = mon;
+                    forecastModel.movements += "M ";
+                    waitlistAdd.daysGiven += "M";
+                  }
+                }
+                else if("TUESDAY" == student.daysWaitlisted[i].day){
+                  if(tues<maxAllowed){
+                    tues++;
+                    forecastModel.tueCount = tues;
+                    forecastModel.movements += "T ";
+                    waitlistAdd.daysGiven += "T";
+                  }
+                }
+                else if("WEDNESDAY" == student.daysWaitlisted[i].day){
+                  if(wed<maxAllowed){
+                    wed++;
+                    forecastModel.wedCount = wed;
+                    forecastModel.movements += "W ";
+                    waitlistAdd.daysGiven += "W";
+
+                  }
+                }
+                else if("THURSDAY" == student.daysWaitlisted[i].day){
+                  if(thur<maxAllowed){
+                    thur++;
+                    forecastModel.thuCount = thur;
+                    forecastModel.movements += "TH ";
+                    waitlistAdd.daysGiven += "H";
+                  }
+                }
+                else if("FRIDAY" == student.daysWaitlisted[i].day){
+                  if(fri<maxAllowed){
+                    fri++;
+                    forecastModel.friCount = fri;
+                    forecastModel.movements += "F ";
+                    waitlistAdd.daysGiven += "F";
+                  }
+                }
+
+              }
+              forecastModel.movements += ") ";
+
+                      if(forecastArray.length==1){
+                        if(student.startDate < forecastStartDate){
+                          forecastModel.movements = "As of " + formatDate(forecastStartDate) + " with " + student.firstName + " " + student.lastName+forecastModel.movements;
+                        }else{
+                          forecastModel.movements = "As of " + formatDate(student.startDate) + " with " + student.firstName + " " + student.lastName+forecastModel.movements;
+                        }
+                      }else{
+                        forecastModel.movements = "As of " + formatDate(dateAval) + " with " + student.firstName + " " + student.lastName+forecastModel.movements;
+                      }
+                    forecastModel.daysReq ="Days Waitlisted: ";
+                    
+                    for(var x=0;x<student.daysWaitlisted.length;x++){
+                    if("MONDAY" == student.daysWaitlisted[x].day){
+                    forecastModel.daysReq += " M ";
+                      }
+                    if("TUESDAY" == student.daysWaitlisted[x].day){
+                        forecastModel.daysReq += " T ";
+                      }
+                      if("WEDNESDAY" == student.daysWaitlisted[x].day){
+                        forecastModel.daysReq += " W ";
+                      }
+                      if("THURSDAY" == student.daysWaitlisted[x].day){
+                        forecastModel.daysReq += " TH ";
+                      }
+                      if("FRIDAY" == student.daysWaitlisted[x].day){
+                        forecastModel.daysReq += " F ";
+                      }
+                    }  
+
+                    forecastModel.movementDate = student.moveDate;
+                    if(waitlistAdd.daysGiven.length ==4){
+                      forecastModel.movements = "***"+forecastModel.movements;
+                    }
+                    forecastModel.monCount = mon;
+                    forecastModel.tueCount = tues;
+                    forecastModel.wedCount = wed;
+                    forecastModel.thuCount = thur;
+                    forecastModel.friCount = fri;
+                    forecastModel.details = student.details;
+                    forecastModel.type = student.type;
+                    forecastModel.status = student.status;
+                    waitlistAdd.id = student._id;
+                    waitlistAdd.dateMovingOut = student.moveDate;
+                    waitlistAddsArray.push(waitlistAdd);
+                    forecastArray.push(forecastModel);
+                
+              }
+          
+          }
+   });
+   return forecastArray;
 }
 
 function formatDate(date){
