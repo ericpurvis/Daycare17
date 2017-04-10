@@ -455,8 +455,18 @@ function createForecast(classroom, startDate, timeFrameString, id)
       
     });
 
-    //check waitlist one last time 
+    //check waitlist one last time / check avalable adds one last time 
     forecastArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,endDate,classroom, studentsTakenOut);
+    
+    if(classroom == 'TODDLER'){
+      forecastArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAddsArray, classroom, "1", waitlistAddsToddler );
+      forecastArray = checkWaitlistTodderOnly("TODDLER",student.moveDate,forecastArray, waitlistAddsArray, classroom, "1", waitlistAddsToddler);
+      }else{
+      forecastArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAddsArray, classroom, "1", null );
+      }
+      
+      forecastArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,endDate,classroom, studentsTakenOut);
+      
 
     mon = forecastArray[forecastArray.length - 1].monCount;
     tues = forecastArray[forecastArray.length - 1].tueCount;
