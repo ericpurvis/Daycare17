@@ -795,7 +795,6 @@ function createForecast(classroom, startDate, timeFrameString, id)
           
           }
         }
-    }
    });
    return forecastArray;
 }
