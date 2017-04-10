@@ -459,10 +459,10 @@ function createForecast(classroom, startDate, timeFrameString, id)
     forecastArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,endDate,classroom, studentsTakenOut);
     
     if(classroom == 'TODDLER'){
-      forecastArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAddsArray, classroom, "1", waitlistAddsToddler );
+      forecastArray = checkWaitlist(classroom, endDate, forecastArray, waitlistAddsArray, classroom, "1", waitlistAddsToddler );
       forecastArray = checkWaitlistTodderOnly("TODDLER",student.moveDate,forecastArray, waitlistAddsArray, classroom, "1", waitlistAddsToddler);
       }else{
-      forecastArray = checkWaitlist(classroom, student.moveDate, forecastArray, waitlistAddsArray, classroom, "1", null );
+      forecastArray = checkWaitlist(classroom, endDate, forecastArray, waitlistAddsArray, classroom, "1", null );
       }
       
       forecastArray = GetWaitlistMoveOut(forecastArray,waitlistAddsArray,startDate,endDate,classroom, studentsTakenOut);
