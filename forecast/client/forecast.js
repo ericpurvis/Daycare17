@@ -617,13 +617,8 @@ function createForecast(classroom, startDate, timeFrameString, id)
               allIds.push(waitlistAddsArray[w].id);
             }
               
-            if(((classroom == "INFANT" && waitlistAddsArray != null && waitlistAddsArray.length > 0  && allIds.indexOf(student._id)>=0) || (classroom == "INFANT" && student.moveDate <= dateAval)) || (classroom == "TODDLER" && student.moveDate > dateAval)){
+            if(((classroom == "INFANT" && waitlistAddsArray != null && waitlistAddsArray.length > 0  && allIds.indexOf(student._id)>=0) || (classroom == "INFANT" && student.moveDate <= dateAval)) || (classroom == "TODDLER" && (student.moveDate > dateAval || allIds.indexOf(student._id)>=0 ))){
                   canBeAdded = false;
-            }
-              //see what days the current student wants
-            else {
-              if(classroom == "TODDLER" && waitlistAddsArray.indexOf(student._id) < 0){
-                canBeAdded = true;
               }else{
                 for(var i=0;i<student.daysWaitlisted.length;i++){
                   console.log(i);
