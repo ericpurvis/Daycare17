@@ -44,7 +44,6 @@ Meteor.methods({
         flexible: false
       });
     });
-
     //if student is already partially enrolled, then concat the new days enrolled with days student is already enrolled
     if(student.status=="PARTIALLY_ENROLLED"){
       daysEnr = daysEnr.concat(student.daysEnrolled);
@@ -153,10 +152,23 @@ Meteor.methods({
       });
     });
     
+    
+    var notConceived;
+    if(waitlist.student.conceived=="NC"){
+      notConceived = true;
+    }
+    else{
+      notConceived=false;
+    }
+    if(!notConceived && waitlist.student.dob == null){
+      throw new Meteor.Error("Must either have date of birth picked or not yet conceived selected");
+    }
+    
     // insert the student
     //if edit from waitlist, change days waitlisted
     //cases ofr all the dates that may not be available if child not conceived 
     if(editMode=='waitlist') {
+     
      var studentId = Students.update(sId, {
         $set: {
           firstName: waitlist.student.firstName,
@@ -171,18 +183,25 @@ Meteor.methods({
           daysWaitlisted: days,
           //moveDate: new Date(moment(waitlist.moveDate)),
           order:order,
+          conceived: notConceived,
           classId: classroomId,
-          //dueDate: new Date(moment(waitlist.student.dueDate)),
         }
       });
-     if(waitlist.student.dob!=""){
-     	var studentId = Students.update(sId, {
+      
+      if(notConceived){
+      var studentId = Students.update(sId, {
+        $set: {    
+          dateOfBirth: null, 
+        }
+      });
+      }else{
+      	var studentId = Students.update(sId, {
         $set: {    
           dateOfBirth: new Date(moment(waitlist.student.dob)),     
         }
       });
-     }
-     if(waitlist.startDate!=""){
+      
+      if(waitlist.startDate!=""){
      	var studentId = Students.update(sId, {
         $set: {    
           startDate: new Date(moment(waitlist.startDate)),     
@@ -203,6 +222,8 @@ Meteor.methods({
         }
       });
      }
+      
+      }
     }else if(editMode=='enrolled'){
       var studentId = Students.update(sId, {
         $set: {
