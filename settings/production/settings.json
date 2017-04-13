@@ -1,7 +1,7 @@
 {
   "public": {
     "appName": "OLB Waitlist Application",
-    "appRootDir":"waitlistapp2017",
+    "appRootDir":"waitlistapp",
     "infantTransMonth": 18,
     "toddlerTransMonth": 30
   },
