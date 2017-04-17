@@ -1,5 +1,5 @@
 PrettyEmail.options = {
-  from: 'Childcare Application <application@ourladyofbethlehem.org>',
+  from: 'Our Lady of Bethlehem Infant and Toddler Waitlist Application <application@ourladyofbethlehem.org>',
   logoUrl: 'http://ourladyofbethlehem.org/wp-content/uploads/2015/01/logo_big_new1.jpg',
   companyName: 'Our Lady of Bethlehem',
   companyUrl: 'http://ourladyofbethlehem.org/',

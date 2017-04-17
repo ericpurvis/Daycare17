@@ -420,9 +420,9 @@ Meteor.methods({
     // Sending the actual email    
     PrettyEmail.send('call-to-action', {
       to: applicationInfo.email,
-      subject: "Childcare Application",
+      subject: "Infant and Toddler Waitlist Application",
       heading: 'Infant and Toddler Waitlist Application',
-      message: 'We hope you your visit at Our Lady of Bethlehem School and Childcare.\nPlease fill out the application in the link below.',
+      message: 'We hope you enjoyed your visit at Our Lady of Bethlehem School and Childcare.\nPlease fill out the application in the link below.',
       buttonText: 'Application',
       buttonUrl: emailButtonUrl,
       messageAfterButton: "This application will expire in 2 days",
