@@ -422,7 +422,7 @@ Meteor.methods({
       to: applicationInfo.email,
       subject: "Infant and Toddler Waitlist Application",
       heading: 'Infant and Toddler Waitlist Application',
-      message: 'We hope you enjoyed your visit at Our Lady of Bethlehem School and Childcare.\nPlease fill out the application in the link below.',
+      message: 'We hope you enjoyed your visit at Our Lady of Bethlehem School and Childcare.\nPlease fill out the application in the link below. NOTE: When filling out the application, please use a version of Internet Explorer (IE) Browser.',
       buttonText: 'Application',
       buttonUrl: emailButtonUrl,
       messageAfterButton: "This application will expire in 2 days",
